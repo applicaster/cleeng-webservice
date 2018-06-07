@@ -1,5 +1,5 @@
 const cleengApi = require('../services/cleeng');
-const { createJWT } = require('../utils/createJWT');
+const { createJWT, getTokenFromJWT } = require('../utils/createJWT');
 
 const login = async (req, res) => {
   try {
@@ -43,14 +43,16 @@ const register = async (req, res) => {
 
 const subscriptions = async (req, res) => {
   try {
-    const { offers, customerToken } = req.body;
+    const { offers: _offers, token } = req.body;
+    const offers = _offers.split(',');
     const results = await Promise.all(
       offers.map(offerId => {
         return cleengApi.getSubscriptionOffer({ offerId });
       })
     );
 
-    if (customerToken) {
+    if (token) {
+      const customerToken = getTokenFromJWT(token);
       const accessResults = await Promise.all(
         offers.map(offerId => {
           return cleengApi.getAccessStatus({ customerToken, offerId });

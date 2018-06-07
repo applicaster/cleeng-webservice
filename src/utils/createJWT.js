@@ -14,4 +14,9 @@ const createJWT = token => {
   return jsonwebtoken.sign(payload, process.env.SECRET_KEY);
 };
 
-module.exports = { createJWT };
+const getTokenFromJWT = jwt => {
+  const { token } = jsonwebtoken.decode(jwt);
+  return token;
+};
+
+module.exports = { createJWT, getTokenFromJWT };
