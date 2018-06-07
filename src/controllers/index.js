@@ -1,5 +1,6 @@
 const cleengApi = require('../services/cleeng');
-const { createJWT, getTokenFromJWT } = require('../utils/createJWT');
+const { createOffersJWT, getTokenFromJWT } = require('../utils/createJWT');
+const allOffers = require('../data/offers');
 
 const login = async (req, res) => {
   try {
@@ -8,8 +9,8 @@ const login = async (req, res) => {
     const data = { publisherToken, customerEmail, password, facebookId };
     const result = await cleengApi.generateToken(data);
     const { token: cleengToken } = result;
-    const token = createJWT(cleengToken);
-    res.status(200).send({ token });
+    const tokens = await createOffersJWT(cleengToken);
+    res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
     const { code, message } = err;
@@ -32,8 +33,8 @@ const register = async (req, res) => {
     const data = { publisherToken, customerData };
     const result = await cleengApi.registerCustomer(data);
     const { token: cleengToken } = result;
-    const token = createJWT(cleengToken);
-    res.status(200).send({ token });
+    const tokens = await createOffersJWT(cleengToken);
+    res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
     const { code, message } = err;
@@ -44,7 +45,9 @@ const register = async (req, res) => {
 const subscriptions = async (req, res) => {
   try {
     const { offers: _offers, token } = req.body;
-    const offers = _offers.split(',');
+    const offers = _offers
+      ? _offers.split(',')
+      : allOffers.map(offer => offer.offerId);
     const results = await Promise.all(
       offers.map(offerId => {
         return cleengApi.getSubscriptionOffer({ offerId });
