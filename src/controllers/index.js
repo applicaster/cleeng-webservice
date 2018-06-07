@@ -76,6 +76,15 @@ const subscriptions = async (req, res) => {
   }
 };
 
-const syncSubscriptions = async (req, res) => {};
+const addSubscription = async (req, res) => {
+  try {
+    const response = await cleengApi.payment(req.body);
+    res.status(200).send(response.data);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
 
-module.exports = { login, register, subscriptions, syncSubscriptions };
+module.exports = { login, register, subscriptions, addSubscription };

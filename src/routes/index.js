@@ -3,7 +3,7 @@ const {
   login,
   register,
   subscriptions,
-  syncSubscriptions
+  addSubscription
 } = require('../controllers');
 
 module.exports = () => {
@@ -12,7 +12,7 @@ module.exports = () => {
   router.post('/login', login);
   router.post('/register', register);
   router.post('/subscriptions', subscriptions);
-  router.post('/syncSubscriptions', syncSubscriptions);
+  router.post('/subscription', addSubscription);
 
   return router;
 };

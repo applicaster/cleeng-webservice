@@ -18,9 +18,5 @@ module.exports = [
     secretKey: '2gRqOMkppQA_L5HZG8oE9k21jQuCiCrLlo6t8IT9',
     appleProductId: '',
     androidProductId: ''
-  },
-  {
-    offerId: 'S524630601_JM',
-    secretKey: 'test'
   }
 ];
