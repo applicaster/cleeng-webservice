@@ -13,7 +13,8 @@
         "PUBLISHER_TOKEN": "ZNXDbmhgC6tL9w5eZzWybTCvniw_b-sIcQz4JlEroAsRq457",
         "SECRET_KEY": "1234",
         "CUSTOMER_NAME": "sportsmax",
-        "TOKEN_EXPIRE_MINUTES": "86400"
+        "TOKEN_EXPIRE_MINUTES": "86400",
+        "AUTH_TOKEN": "ZGlnaXRhbG1lZGlhQHNwb3J0c21heC50djp4c01QVlFtclpzNjNta0sy"
       }
     }
   ]

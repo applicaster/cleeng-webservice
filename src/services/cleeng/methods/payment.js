@@ -4,7 +4,7 @@ const payment = async params => {
   const {
     platform = 'apple',
     env = 'production',
-    customerEmail,
+    customerToken,
     receipt,
     offerId,
     appType
@@ -19,7 +19,7 @@ const payment = async params => {
   const subdomain = env === 'sandbox' ? 'sandbox.' : '';
   const method = 'POST';
   const url = `https://${subdomain}cleeng.com/${platform}/payment`;
-  const data = { customerEmail, offerId, receipt, appType };
+  const data = { customerToken, offerId, receipt, appType };
   return axios({ headers, url, method, data });
 };
 

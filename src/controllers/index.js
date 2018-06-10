@@ -78,6 +78,9 @@ const subscriptions = async (req, res) => {
 
 const addSubscription = async (req, res) => {
   try {
+    const { token } = req.body;
+    const cleengToken = getTokenFromJWT(token);
+    req.body.customerToken = cleengToken;
     const response = await cleengApi.payment(req.body);
     res.status(200).send(response.data);
   } catch (err) {
