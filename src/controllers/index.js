@@ -48,6 +48,7 @@ const subscriptions = async (req, res) => {
     const offers = _offers
       ? _offers.split(',')
       : allOffers.map(offer => offer.offerId);
+
     const results = await Promise.all(
       offers.map(offerId => {
         if (offerId.toLowerCase().startsWith('p')) {
@@ -57,6 +58,16 @@ const subscriptions = async (req, res) => {
         }
       })
     );
+
+    results.forEach(result => {
+      const { appleProductId, androidProductId } =
+        allOffers.find(offer => {
+          const { offerId } = offer;
+          return offerId === result.id;
+        }) || {};
+      result.appleProductId = appleProductId;
+      result.androidProductId = androidProductId;
+    });
 
     if (token) {
       const customerToken = getTokenFromJWT(token);
