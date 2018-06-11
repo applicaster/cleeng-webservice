@@ -50,7 +50,11 @@ const subscriptions = async (req, res) => {
       : allOffers.map(offer => offer.offerId);
     const results = await Promise.all(
       offers.map(offerId => {
-        return cleengApi.getSubscriptionOffer({ offerId });
+        if (offerId.toLowerCase().startsWith('p')) {
+          return cleengApi.getPassOffer({ offerId });
+        } else {
+          return cleengApi.getSubscriptionOffer({ offerId });
+        }
       })
     );
 

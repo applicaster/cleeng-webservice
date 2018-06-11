@@ -3,11 +3,13 @@ const { getAccessStatus } = require('./methods/getAccessStatus');
 const { getSubscriptionOffer } = require('./methods/getSubscriptionOffer');
 const { registerCustomer } = require('./methods/registerCustomer');
 const { payment } = require('./methods/payment');
+const { getPassOffer } = require('./methods/getPassOffer');
 
 module.exports = {
   generateToken,
   getAccessStatus,
   getSubscriptionOffer,
+  getPassOffer,
   registerCustomer,
   payment
 };
