@@ -3,7 +3,8 @@ const {
   login,
   register,
   subscriptions,
-  addSubscription
+  addSubscription,
+  extendToken
 } = require('../controllers');
 
 module.exports = () => {
@@ -13,6 +14,7 @@ module.exports = () => {
   router.post('/register', register);
   router.post('/subscriptions', subscriptions);
   router.post('/subscription', addSubscription);
+  router.post('/extendToken', extendToken);
 
   return router;
 };

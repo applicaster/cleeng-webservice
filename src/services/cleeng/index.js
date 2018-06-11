@@ -4,6 +4,7 @@ const { getSubscriptionOffer } = require('./methods/getSubscriptionOffer');
 const { registerCustomer } = require('./methods/registerCustomer');
 const { payment } = require('./methods/payment');
 const { getPassOffer } = require('./methods/getPassOffer');
+const { extendTokenExpiration } = require('./methods/extendTokenExpiration');
 
 module.exports = {
   generateToken,
@@ -11,5 +12,6 @@ module.exports = {
   getSubscriptionOffer,
   getPassOffer,
   registerCustomer,
-  payment
+  payment,
+  extendTokenExpiration
 };

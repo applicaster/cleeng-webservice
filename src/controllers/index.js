@@ -105,4 +105,27 @@ const addSubscription = async (req, res) => {
   }
 };
 
-module.exports = { login, register, subscriptions, addSubscription };
+const extendToken = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const customerToken = getTokenFromJWT(token);
+    const publisherToken = process.env.PUBLISHER_TOKEN;
+    const extensionTime = process.env.TOKEN_EXPIRE_MINUTES * 60;
+    const data = { customerToken, publisherToken, extensionTime };
+    await cleengApi.extendTokenExpiration(data);
+    const tokens = await createOffersJWT(customerToken);
+    res.status(200).send(tokens);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
+module.exports = {
+  login,
+  register,
+  subscriptions,
+  addSubscription,
+  extendToken
+};
