@@ -3,8 +3,8 @@ module.exports = [
     offerId: 'P102035786_JM',
     secretKey:
       's2eE8iGjt7EGR2b9UOPTyoCbL7W8WS39t3szQEoU2gRqOMkppQA_L5HZG8oE9k21jQuCiCrLlo6t8IT9',
-    appleProductId: 'com.sportsmax.P102035786_JM',
-    androidProductId: 'com.sportsmax.P102035786_JM'
+    appleProductId: 'com.sportsmax.P102035786_JMN',
+    androidProductId: 'com.sportsmax.P102035786_JMN'
   },
   {
     offerId: 'P275826709_JM',
