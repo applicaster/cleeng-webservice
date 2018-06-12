@@ -122,10 +122,25 @@ const extendToken = async (req, res) => {
   }
 };
 
+const passwordReset = async (req, res) => {
+  try {
+    const { email: customerEmail } = req.body;
+    const publisherToken = process.env.PUBLISHER_TOKEN;
+    const data = { customerEmail, publisherToken };
+    const result = await cleengApi.requestPasswordReset(data);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
 module.exports = {
   login,
   register,
   subscriptions,
   addSubscription,
-  extendToken
+  extendToken,
+  passwordReset
 };

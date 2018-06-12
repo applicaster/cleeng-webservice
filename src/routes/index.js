@@ -4,7 +4,8 @@ const {
   register,
   subscriptions,
   addSubscription,
-  extendToken
+  extendToken,
+  passwordReset
 } = require('../controllers');
 
 module.exports = () => {
@@ -15,6 +16,7 @@ module.exports = () => {
   router.post('/subscriptions', subscriptions);
   router.post('/subscription', addSubscription);
   router.post('/extendToken', extendToken);
+  router.post('/passwordReset', passwordReset);
 
   return router;
 };
