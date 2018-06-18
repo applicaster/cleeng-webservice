@@ -20,6 +20,7 @@ const payment = async params => {
   const method = 'POST';
   const url = `https://${subdomain}cleeng.com/${platform}/payment`;
   const receipt = JSON.parse(_receipt);
+  receipt.receiptData = decodeURIComponent(receipt.receiptData);
   const data = { customerToken, offerId, receipt, appType };
   return axios({ headers, url, method, data });
 };
