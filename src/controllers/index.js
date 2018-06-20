@@ -44,7 +44,7 @@ const register = async (req, res) => {
 
 const subscriptions = async (req, res) => {
   try {
-    const { offers: _offers, token } = req.body;
+    const { offers: _offers = '', token } = req.body;
     const offers = _offers
       ? _offers.split(',')
       : allOffers.map(offer => offer.offerId);
