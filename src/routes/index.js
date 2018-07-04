@@ -1,3 +1,5 @@
+const basicAuth = require('express-basic-auth');
+
 const express = require('express');
 const {
   login,
@@ -5,7 +7,8 @@ const {
   subscriptions,
   addSubscription,
   extendToken,
-  passwordReset
+  passwordReset,
+  updatePublisher
 } = require('../controllers');
 
 module.exports = () => {
@@ -17,6 +20,13 @@ module.exports = () => {
   router.post('/subscription', addSubscription);
   router.post('/extendToken', extendToken);
   router.post('/passwordReset', passwordReset);
+  router.post(
+    '/publisher',
+    basicAuth({
+      users: { admin: process.env.ADMIN_PASSWORD }
+    }),
+    updatePublisher
+  );
 
   return router;
 };

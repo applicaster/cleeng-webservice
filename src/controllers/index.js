@@ -1,15 +1,15 @@
 const cleengApi = require('../services/cleeng');
 const { createOffersJWT, getTokenFromJWT } = require('../utils/createJWT');
-const allOffers = require('../data/offers');
+const Publisher = require('../models/publisher');
 
 const login = async (req, res) => {
   try {
     const { email: customerEmail, password, facebookId } = req.body;
-    const publisherToken = process.env.PUBLISHER_TOKEN;
+    const publisherToken = req.publisher.publisherToken;
     const data = { publisherToken, customerEmail, password, facebookId };
     const result = await cleengApi.generateToken(data);
     const { token: cleengToken } = result;
-    const tokens = await createOffersJWT(cleengToken);
+    const tokens = await createOffersJWT(cleengToken, req.publisher);
     res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
@@ -21,7 +21,7 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { email, password, facebookId, locale, country, currency } = req.body;
-    const publisherToken = process.env.PUBLISHER_TOKEN;
+    const publisherToken = req.publisher.publisherToken;
     const customerData = {
       email,
       password,
@@ -33,7 +33,7 @@ const register = async (req, res) => {
     const data = { publisherToken, customerData };
     const result = await cleengApi.registerCustomer(data);
     const { token: cleengToken } = result;
-    const tokens = await createOffersJWT(cleengToken);
+    const tokens = await createOffersJWT(cleengToken, req.publisher);
     res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
@@ -44,6 +44,7 @@ const register = async (req, res) => {
 
 const subscriptions = async (req, res) => {
   try {
+    const { offers: allOffers } = req.publisher;
     const { offers: _offers = '', token } = req.body;
     const offers = Array.isArray(_offers)
       ? _offers
@@ -98,7 +99,7 @@ const addSubscription = async (req, res) => {
     const { token } = req.body;
     const cleengToken = getTokenFromJWT(token);
     req.body.customerToken = cleengToken;
-    const response = await cleengApi.payment(req.body);
+    const response = await cleengApi.payment(req.body, req.publisher);
     const result = response.data;
     res.status(200).send({ result });
   } catch (err) {
@@ -112,11 +113,11 @@ const extendToken = async (req, res) => {
   try {
     const { token } = req.body;
     const customerToken = getTokenFromJWT(token);
-    const publisherToken = process.env.PUBLISHER_TOKEN;
+    const publisherToken = req.publisher.publisherToken;
     const extensionTime = process.env.TOKEN_EXPIRE_MINUTES * 60;
     const data = { customerToken, publisherToken, extensionTime };
     await cleengApi.extendTokenExpiration(data);
-    const tokens = await createOffersJWT(customerToken);
+    const tokens = await createOffersJWT(customerToken, req.publisher);
     res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
@@ -128,7 +129,7 @@ const extendToken = async (req, res) => {
 const passwordReset = async (req, res) => {
   try {
     const { email: customerEmail } = req.body;
-    const publisherToken = process.env.PUBLISHER_TOKEN;
+    const publisherToken = req.publisher.publisherToken;
     const data = { customerEmail, publisherToken };
     const result = await cleengApi.requestPasswordReset(data);
     res.status(200).send(result);
@@ -139,11 +140,43 @@ const passwordReset = async (req, res) => {
   }
 };
 
+const updatePublisher = async (req, res) => {
+  try {
+    const {
+      publisherId: _id,
+      name,
+      publisherToken,
+      authToken,
+      secretKey,
+      offers
+    } = req.body;
+
+    let publisher = await Publisher.findOne({ _id });
+    if (!publisher) {
+      publisher = new Publisher();
+    }
+
+    publisher.name = name;
+    publisher.publisherToken = publisherToken;
+    publisher.authToken = authToken;
+    publisher.secretKey = secretKey;
+    publisher.offers = offers;
+
+    const result = await publisher.save();
+
+    res.status(200).send({ result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
+
 module.exports = {
   login,
   register,
   subscriptions,
   addSubscription,
   extendToken,
-  passwordReset
+  passwordReset,
+  updatePublisher
 };

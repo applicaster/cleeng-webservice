@@ -1,10 +1,9 @@
 const moment = require('moment');
 const jsonwebtoken = require('jsonwebtoken');
-const allOffers = require('../data/offers');
 const api = require('../services/cleeng');
 
-const createJWT = (token, secretKey) => {
-  const iss = process.env.CUSTOMER_NAME;
+const createJWT = (token, publisher) => {
+  const iss = publisher.name;
   const exp = moment()
     .add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes')
     .unix();
@@ -13,7 +12,7 @@ const createJWT = (token, secretKey) => {
     exp,
     token
   };
-  return jsonwebtoken.sign(payload, secretKey || process.env.SECRET_KEY);
+  return jsonwebtoken.sign(payload, publisher.secretKey);
 };
 
 const getTokenFromJWT = jwt => {
@@ -21,11 +20,13 @@ const getTokenFromJWT = jwt => {
   return token;
 };
 
-const createOffersJWT = async cleengToken => {
+const createOffersJWT = async (cleengToken, publisher) => {
   const result = [];
-  const token = createJWT(cleengToken);
+  const token = createJWT(cleengToken, publisher);
   const offerId = '';
   result.push({ offerId, token });
+
+  const { offers: allOffers } = publisher;
 
   const offersStatuses = await Promise.all(
     allOffers.map(offer => {

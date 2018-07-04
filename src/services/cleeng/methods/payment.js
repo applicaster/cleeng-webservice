@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const payment = async params => {
+const payment = async (params, publisher) => {
   const {
     platform = 'apple',
     env = 'production',
@@ -9,8 +9,8 @@ const payment = async params => {
     offerId,
     appType
   } = params;
-  const publisherToken = process.env.PUBLISHER_TOKEN;
-  const authToken = process.env.AUTH_TOKEN;
+  const publisherToken = publisher.publisherToken;
+  const authToken = publisher.authToken;
   const headers = {
     'Content-Type': 'application/json',
     'X-Publisher-Token': publisherToken,
