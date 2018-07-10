@@ -2,7 +2,7 @@ const moment = require('moment');
 const jsonwebtoken = require('jsonwebtoken');
 const api = require('../services/cleeng');
 
-const createJWT = (token, publisher) => {
+const createJWT = (token, publisher, secretKey) => {
   const iss = publisher.name;
   const exp = moment()
     .add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes')
@@ -12,7 +12,7 @@ const createJWT = (token, publisher) => {
     exp,
     token
   };
-  return jsonwebtoken.sign(payload, publisher.secretKey);
+  return jsonwebtoken.sign(payload, secretKey || publisher.secretKey);
 };
 
 const getTokenFromJWT = jwt => {
@@ -49,7 +49,7 @@ const createOffersJWT = async (cleengToken, publisher) => {
       }) || {};
 
     if (secretKey) {
-      const token = createJWT(cleengToken, secretKey);
+      const token = createJWT(cleengToken, publisher, secretKey);
       result.push({ offerId, token });
     }
   });
