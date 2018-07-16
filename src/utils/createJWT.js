@@ -43,14 +43,14 @@ const createOffersJWT = async (cleengToken, publisher) => {
 
   activeOffers.forEach((obj, index) => {
     const { offerId } = allOffers[index];
-    const { secretKey } =
+    const { secretKey, authId } =
       allOffers.find(aOffer => {
         return aOffer.offerId === offerId;
       }) || {};
 
     if (secretKey) {
       const token = createJWT(cleengToken, publisher, secretKey);
-      result.push({ offerId, token });
+      result.push({ offerId, token, authId });
     }
   });
 

@@ -1,6 +1,7 @@
 const cleengApi = require('../services/cleeng');
 const { createOffersJWT, getTokenFromJWT } = require('../utils/createJWT');
 const Publisher = require('../models/publisher');
+const { setOfferIdFromAuthId } = require('../utils/setOfferIdFromAuthId');
 
 const login = async (req, res) => {
   try {
@@ -45,12 +46,20 @@ const register = async (req, res) => {
 const subscriptions = async (req, res) => {
   try {
     const { offers: allOffers } = req.publisher;
-    const { offers: _offers = '', token } = req.body;
-    const offers = Array.isArray(_offers)
+    const { offers: _offers = '', token, byAuthId = 0 } = req.body;
+    let offers = Array.isArray(_offers)
       ? _offers
       : _offers
         ? _offers.split(',')
         : allOffers.map(offer => offer.offerId);
+
+    if (byAuthId == 1) {
+      offers = offers.map(authId => {
+        const { offerId } =
+          allOffers.find(offer => authId == offer.authId) || {};
+        return offerId;
+      });
+    }
 
     const results = await Promise.all(
       offers.map(offerId => {
@@ -63,13 +72,14 @@ const subscriptions = async (req, res) => {
     );
 
     results.forEach(result => {
-      const { appleProductId, androidProductId } =
+      const { appleProductId, androidProductId, authId } =
         allOffers.find(offer => {
           const { offerId } = offer;
           return offerId === result.id;
         }) || {};
       result.appleProductId = appleProductId;
       result.androidProductId = androidProductId;
+      result.authId = authId;
     });
 
     if (token) {
@@ -99,6 +109,7 @@ const addSubscription = async (req, res) => {
     const { token } = req.body;
     const cleengToken = getTokenFromJWT(token);
     req.body.customerToken = cleengToken;
+    setOfferIdFromAuthId(req.body, req.publisher);
     const response = await cleengApi.payment(req.body, req.publisher);
     const result = response.data;
     res.status(200).send({ result });
