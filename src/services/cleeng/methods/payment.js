@@ -13,8 +13,8 @@ const payment = async (params, publisher) => {
   const authToken = publisher.authToken;
   const headers = {
     'Content-Type': 'application/json',
-    'X-Publisher-Token': publisherToken,
-    Authorization: `Basic ${authToken}`
+    'X-Publisher-Token': publisherToken /*,
+    Authorization: `Basic ${authToken}`*/
   };
   const subdomain = env === 'sandbox' ? 'sandbox.' : '';
   const method = 'POST';
