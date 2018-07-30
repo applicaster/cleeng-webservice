@@ -10,7 +10,11 @@ const login = async (req, res) => {
     const data = { publisherToken, customerEmail, password, facebookId };
     const result = await cleengApi.generateToken(data);
     const { token: cleengToken } = result;
-    const tokens = await createOffersJWT(cleengToken, req.publisher);
+    const tokens = await createOffersJWT(
+      cleengToken,
+      req.publisher,
+      req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    );
     res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
@@ -34,7 +38,11 @@ const register = async (req, res) => {
     const data = { publisherToken, customerData };
     const result = await cleengApi.registerCustomer(data);
     const { token: cleengToken } = result;
-    const tokens = await createOffersJWT(cleengToken, req.publisher);
+    const tokens = await createOffersJWT(
+      cleengToken,
+      req.publisher,
+      req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    );
     res.status(200).send(tokens);
   } catch (err) {
     console.log(err);
@@ -93,10 +101,16 @@ const subscriptions = async (req, res) => {
     });
 
     if (token) {
+      const ipAddress =
+        req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       const customerToken = getTokenFromJWT(token);
       const accessResults = await Promise.all(
         offers.map(offerId => {
-          return cleengApi.getAccessStatus({ customerToken, offerId });
+          return cleengApi.getAccessStatus({
+            customerToken,
+            offerId,
+            ipAddress
+          });
         })
       );
 
@@ -138,7 +152,11 @@ const extendToken = async (req, res) => {
     const extensionTime = process.env.TOKEN_EXPIRE_MINUTES * 60;
     const data = { customerToken, publisherToken, extensionTime };
     await cleengApi.extendTokenExpiration(data);
-    const tokens = await createOffersJWT(customerToken, req.publisher);
+    const tokens = await createOffersJWT(
+      customerToken,
+      req.publisher,
+      req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    );
     res.status(200).send(tokens);
   } catch (err) {
     console.log(err);

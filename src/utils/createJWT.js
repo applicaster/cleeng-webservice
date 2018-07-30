@@ -20,7 +20,7 @@ const getTokenFromJWT = jwt => {
   return token;
 };
 
-const createOffersJWT = async (cleengToken, publisher) => {
+const createOffersJWT = async (cleengToken, publisher, ipAddress) => {
   const result = [];
   const token = createJWT(cleengToken, publisher);
   const offerId = '';
@@ -32,7 +32,7 @@ const createOffersJWT = async (cleengToken, publisher) => {
     allOffers.map(offer => {
       const { offerId } = offer;
       const customerToken = cleengToken;
-      return api.getAccessStatus({ offerId, customerToken });
+      return api.getAccessStatus({ offerId, customerToken, ipAddress });
     })
   );
 
