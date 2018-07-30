@@ -46,7 +46,7 @@ const register = async (req, res) => {
 const subscriptions = async (req, res) => {
   try {
     const { offers: allOffers } = req.publisher;
-    const { offers: _offers = '', token, byAuthId = 0 } = req.body;
+    const { offers: _offers = '', token, byAuthId = 0, videoId } = req.body;
     let offers = Array.isArray(_offers)
       ? _offers
       : _offers
@@ -65,6 +65,16 @@ const subscriptions = async (req, res) => {
       offers.map(offerId => {
         if (offerId.toLowerCase().startsWith('p')) {
           return cleengApi.getPassOffer({ offerId });
+        } else if (offerId.toLowerCase().startsWith('e')) {
+          return cleengApi.getEventOffer({ offerId });
+        } else if (offerId.toLowerCase().startsWith('a')) {
+          const { publisherToken } = req.publisher;
+          return cleengApi.getVodOffer({
+            offerIdString: offerId,
+            publisherToken
+          });
+        } else if (offerId.toLowerCase().startsWith('r')) {
+          return cleengApi.getRentalOffer({ offerId, videoId });
         } else {
           return cleengApi.getSubscriptionOffer({ offerId });
         }
