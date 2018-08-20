@@ -78,3 +78,5 @@ lib
 .idea
 
 .eslintrc.json
+
+admin/build
