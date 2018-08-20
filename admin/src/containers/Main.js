@@ -46,7 +46,7 @@ class Main extends Component {
               noWrap
               className={classes.title}
             >
-              Dashboard
+              Applicaster/Cleeng Admin Dashboard
             </Typography>
           </Toolbar>
         </AppBar>
