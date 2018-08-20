@@ -84,7 +84,8 @@ class Publishers extends Component {
                       <TableCell>{_id}</TableCell>
                       <TableCell>{updatedBy}</TableCell>
                       <TableCell>
-                        {moment(updatedAt).format('YYYY MMM DD HH:mm')}
+                        {updatedAt &&
+                          moment(updatedAt).format('YYYY MMM DD HH:mm')}
                       </TableCell>
                     </TableRow>
                   );
