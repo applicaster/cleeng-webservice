@@ -7,26 +7,25 @@ const {
   subscriptions,
   addSubscription,
   extendToken,
-  passwordReset,
-  updatePublisher
+  passwordReset
 } = require('../controllers');
+
+const dashboardController = require('../controllers/dashboard.controller');
+const publisherMiddleWare = require('../middlewares/publisher.middleware');
+const dashboardAuth = require('../middlewares/dashboard-auth.middleware');
 
 module.exports = () => {
   const router = express.Router();
 
-  router.post('/login', login);
-  router.post('/register', register);
-  router.post('/subscriptions', subscriptions);
-  router.post('/subscription', addSubscription);
-  router.post('/extendToken', extendToken);
-  router.post('/passwordReset', passwordReset);
-  router.post(
-    '/publisher',
-    basicAuth({
-      users: { admin: process.env.ADMIN_PASSWORD }
-    }),
-    updatePublisher
-  );
+  router.post('/login', publisherMiddleWare, login);
+  router.post('/register', publisherMiddleWare, register);
+  router.post('/subscriptions', publisherMiddleWare, subscriptions);
+  router.post('/subscription', publisherMiddleWare, addSubscription);
+  router.post('/extendToken', publisherMiddleWare, extendToken);
+  router.post('/passwordReset', publisherMiddleWare, passwordReset);
+
+  router.post('/publisher', dashboardAuth, dashboardController.updatePublisher);
+  router.get('/publishers', dashboardAuth, dashboardController.getPublishers);
 
   return router;
 };

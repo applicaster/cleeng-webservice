@@ -179,43 +179,11 @@ const passwordReset = async (req, res) => {
   }
 };
 
-const updatePublisher = async (req, res) => {
-  try {
-    const {
-      publisherId: _id,
-      name,
-      publisherToken,
-      authToken,
-      secretKey,
-      offers
-    } = req.body;
-
-    let publisher = await Publisher.findOne({ _id });
-    if (!publisher) {
-      publisher = new Publisher();
-    }
-
-    publisher.name = name;
-    publisher.publisherToken = publisherToken;
-    publisher.authToken = authToken;
-    publisher.secretKey = secretKey;
-    publisher.offers = offers;
-
-    const result = await publisher.save();
-
-    res.status(200).send({ result });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
-  }
-};
-
 module.exports = {
   login,
   register,
   subscriptions,
   addSubscription,
   extendToken,
-  passwordReset,
-  updatePublisher
+  passwordReset
 };

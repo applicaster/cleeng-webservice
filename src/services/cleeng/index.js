@@ -20,6 +20,5 @@ module.exports = {
   extendTokenExpiration,
   requestPasswordReset,
   getEventOffer,
-  getVodOffer,
-  getRentalOffer
+  getVodOffer
 };

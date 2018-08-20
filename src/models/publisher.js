@@ -6,7 +6,9 @@ const publisherSchema = new Schema({
   publisherToken: String,
   authToken: String,
   secretKey: String,
-  offers: Object
+  offers: Object,
+  updatedAt: Date,
+  updatedBy: String
 });
 
 const Publisher = mongoose.model('Publisher', publisherSchema);
