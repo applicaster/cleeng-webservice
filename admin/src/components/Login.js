@@ -36,6 +36,10 @@ class Login extends Component {
 
   render() {
     const { classes } = this.props;
+    const googleClientId =
+      process.env.NODE_ENV === 'production'
+        ? '7448824555-sr9k7pjd8t561q88fck00v3jg6h2tnor.apps.googleusercontent.com'
+        : '7448824555-vqlj6r0153smnhujq7iaf5h1k2aobqr8.apps.googleusercontent.com';
 
     return (
       <div className={classes.layout}>
@@ -45,7 +49,7 @@ class Login extends Component {
           </Typography>
 
           <GoogleLogin
-            clientId="7448824555-vqlj6r0153smnhujq7iaf5h1k2aobqr8.apps.googleusercontent.com"
+            clientId={googleClientId}
             buttonText="Login"
             onSuccess={this.responseGoogle}
             onFailure={this.responseGoogle}
