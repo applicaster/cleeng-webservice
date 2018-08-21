@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
 import Publishers from '../containers/Publishers';
 import Publisher from '../containers/Publisher';
 
@@ -30,10 +29,6 @@ const styles = theme => ({
 });
 
 class Main extends Component {
-  constructor() {
-    super();
-  }
-
   render() {
     const { classes = {} } = this.props;
     return (

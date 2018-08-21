@@ -13,6 +13,8 @@ export function getPublishers(authToken, userData) {
       const { publishers } = result.data;
       dispatch({ type: types.USER_LOGGED_IN, authToken, userData });
       dispatch({ type: publisherActionTypes.PUBLISHERS_FETCHED, publishers });
+      sessionStorage.setItem('authToken', authToken);
+      sessionStorage.setItem('userData', userData);
     } catch (error) {
       dispatch({ type: publisherActionTypes.PUBLISHERS_FETCH_FAILED, error });
       console.error(error);

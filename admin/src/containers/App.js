@@ -8,7 +8,13 @@ import AlertDialog from '../components/AlertDialog';
 import * as publisherTypes from '../store/publisher/actionTypes';
 
 class App extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    const authToken = sessionStorage.getItem('authToken');
+    const userData = sessionStorage.getItem('userData');
+    if (authToken && userData) {
+      this.props.dispatch(userActions.getPublishers(authToken, userData));
+    }
+  }
 
   onLoginResponse = response => {
     const { profileObj, tokenId } = response;

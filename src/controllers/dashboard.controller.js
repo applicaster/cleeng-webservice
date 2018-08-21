@@ -2,7 +2,7 @@ const Publisher = require('../models/publisher');
 
 const getPublishers = async (req, res) => {
   try {
-    const publishers = await Publisher.find();
+    const publishers = await Publisher.find().sort('name');
     res.status(200).send({ publishers });
   } catch (err) {
     console.log(err);

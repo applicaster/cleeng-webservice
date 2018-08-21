@@ -36,14 +36,21 @@ const styles = theme => ({
 class Publisher extends Component {
   componentDidMount() {}
 
-  constructor() {
+  constructor(props) {
     super();
+
     this.state = {
       okDisabled: true,
       offers: [],
-      publisher: {},
+      publisher: props.publisher || {},
       offersDidChange: false
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.publisher._id && this.props.publisher._id) {
+      this.setState({ publisher: this.props.publisher });
+    }
   }
 
   onOffersChanged = offers => {
@@ -51,7 +58,8 @@ class Publisher extends Component {
   };
 
   onTextFieldChange = e => {
-    let { publisher } = this.state;
+    let { publisher: _publisher } = this.state;
+    const publisher = { ..._publisher };
     publisher[e.target.id] = e.target.value;
     this.setState({
       okDisabled: false,
@@ -68,7 +76,7 @@ class Publisher extends Component {
     const {
       publisher: { _id = '-1' }
     } = this.props;
-    const publisher = { _id, offers, ..._publisher };
+    const publisher = { _id, ..._publisher, offers };
     if (!offersDidChange) {
       delete publisher.offers;
     }
@@ -78,7 +86,8 @@ class Publisher extends Component {
 
   render() {
     const { classes } = this.props;
-    const { _id, name, publisherToken, offers } = this.props.publisher;
+    const { _id, offers } = this.props.publisher;
+    const { name = '', publisherToken = '' } = this.state.publisher;
     return (
       <div className={classes.layout}>
         <div className={classes.titleContainer}>
@@ -93,7 +102,7 @@ class Publisher extends Component {
                 id="name"
                 label="name"
                 className={classes.textField}
-                defaultValue={name}
+                value={name}
                 margin="normal"
                 onChange={this.onTextFieldChange}
                 required
@@ -104,7 +113,7 @@ class Publisher extends Component {
                 id="publisherToken"
                 label="publisherToken"
                 className={classes.textField}
-                defaultValue={publisherToken}
+                value={publisherToken}
                 margin="normal"
                 onChange={this.onTextFieldChange}
                 required
