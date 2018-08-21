@@ -80,3 +80,4 @@ lib
 .eslintrc.json
 
 admin/build
+admini/node_modules
