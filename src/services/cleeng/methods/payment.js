@@ -2,13 +2,16 @@ const axios = require('axios');
 
 const payment = async (params, publisher) => {
   const {
-    platform = 'apple',
     env = 'production',
     customerToken,
     receipt,
     offerId,
     appType
   } = params;
+  const platform =
+    appType.toLowerCase() === 'ios' || appType.toLowerCase() === 'tvos'
+      ? 'apple'
+      : 'android';
   const publisherToken = publisher.publisherToken;
   const authToken = publisher.authToken;
   const headers = {
@@ -20,9 +23,6 @@ const payment = async (params, publisher) => {
   const method = 'POST';
   const url = `https://${subdomain}cleeng.com/${platform}/payment`;
   const data = { customerToken, offerId, receipt, appType };
-  console.log(url);
-  console.log(headers);
-  console.log(data);
   return axios({ headers, url, method, data });
 };
 
