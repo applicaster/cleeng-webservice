@@ -9,7 +9,8 @@ const payment = async (params, publisher) => {
     appType
   } = params;
   const platform =
-    appType.toLowerCase() === 'ios' || appType.toLowerCase() === 'tvos'
+    appType &&
+    (appType.toLowerCase() === 'ios' || appType.toLowerCase() === 'tvos')
       ? 'apple'
       : 'android';
   const publisherToken = publisher.publisherToken;
