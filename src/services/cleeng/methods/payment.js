@@ -20,6 +20,9 @@ const payment = async (params, publisher) => {
   const method = 'POST';
   const url = `https://${subdomain}cleeng.com/${platform}/payment`;
   const data = { customerToken, offerId, receipt, appType };
+  console.log(url);
+  console.log(headers);
+  console.log(data);
   return axios({ headers, url, method, data });
 };
 
