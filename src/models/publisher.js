@@ -5,7 +5,7 @@ const publisherSchema = new Schema({
   name: String,
   publisherToken: String,
   authToken: String,
-  secretKey: String,
+  secretKey: { type: String, default: '1234' },
   offers: Object,
   updatedAt: Date,
   updatedBy: String
