@@ -140,8 +140,7 @@ const addSubscription = async (req, res) => {
   } catch (err) {
     console.log(err);
     const { code, message } = err;
-    const dataMessage = err.data && err.data.message;
-    res.status(500).send({ code, message: message || dataMessage });
+    res.status(500).send({ code, message });
   }
 };
 
