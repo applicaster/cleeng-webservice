@@ -17,6 +17,8 @@ const payment = async (params, publisher) => {
       : appType && appType.toLowerCase() === 'roku'
         ? 'roku'
         : 'android';
+
+  console.log(`platform:${platform}`);
   const publisherToken = publisher.publisherToken;
   const authToken = publisher.authToken;
   const headers = {
