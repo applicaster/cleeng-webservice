@@ -139,6 +139,8 @@ const addSubscription = async (req, res) => {
     const cleengToken = getTokenFromJWT(token);
     req.body.customerToken = cleengToken;
     setOfferIdFromAuthId(req.body, req.publisher);
+    req.body.ipAddress =
+      req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const response = await cleengApi.payment(req.body, req.publisher);
     const result = response.data;
     res.status(200).send({ result });
