@@ -18,7 +18,6 @@ const payment = async (params, publisher) => {
         ? 'roku'
         : 'android';
 
-  console.log(`platform:${platform}`);
   const publisherToken = publisher.publisherToken;
   const authToken = publisher.authToken;
   const headers = {
@@ -29,7 +28,7 @@ const payment = async (params, publisher) => {
   const subdomain = env === 'sandbox' ? 'sandbox.' : '';
   const method = 'POST';
   const url = `https://${subdomain}cleeng.com/${platform}/payment`;
-  const data = { customerToken, offerId, receipt, appType, order, ipAddress };
+  const data = { customerToken, offerId, receipt, appType, order };
   return axios({ headers, url, method, data });
 };
 
