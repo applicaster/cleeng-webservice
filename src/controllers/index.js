@@ -1,6 +1,5 @@
 const cleengApi = require('../services/cleeng');
 const { createOffersJWT, getTokenFromJWT } = require('../utils/createJWT');
-const Publisher = require('../models/publisher');
 const { setOfferIdFromAuthId } = require('../utils/setOfferIdFromAuthId');
 
 const login = async (req, res) => {

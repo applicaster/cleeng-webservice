@@ -8,7 +8,8 @@ const publisherSchema = new Schema({
   secretKey: { type: String, default: '1234' },
   offers: Object,
   updatedAt: Date,
-  updatedBy: String
+  updatedBy: String,
+  appStoreSharedKey: String
 });
 
 const Publisher = mongoose.model('Publisher', publisherSchema);

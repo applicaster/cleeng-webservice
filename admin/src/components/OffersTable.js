@@ -74,6 +74,7 @@ class OffersTable extends Component {
     const { selectedOfferIndex, offers: _offers } = this.state;
     const offers = [..._offers];
     if (result) {
+      console.log(result);
       if (selectedOfferIndex === -1) {
         offers.push(result);
       } else {

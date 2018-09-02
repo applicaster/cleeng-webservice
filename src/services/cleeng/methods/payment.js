@@ -1,4 +1,7 @@
 const axios = require('axios');
+const {
+  verifyAppStoreReceipt
+} = require('../../../utils/verifyAppStoreReceipt');
 
 const payment = async (params, publisher) => {
   const {
@@ -8,7 +11,8 @@ const payment = async (params, publisher) => {
     offerId,
     appType,
     order,
-    ipAddress
+    ipAddress,
+    isRestored = false
   } = params;
   const platform =
     appType &&
@@ -18,15 +22,21 @@ const payment = async (params, publisher) => {
         ? 'roku'
         : 'android';
 
-  if (receipt && receipt.receiptData) {
-    console.log(receipt.receiptData);
+  if (platform === 'apple' && isRestored) {
+    const { offers } = publisher;
+    const offer = offers.find(offer => offer.offerId === offerId);
+    if (offer && offer.isAutoRenewable === true) {
+      receipt.transactionId = await verifyAppStoreReceipt(
+        receipt.receiptData,
+        publisher.appStoreSharedKey
+      );
+    }
   }
+
   const publisherToken = publisher.publisherToken;
-  const authToken = publisher.authToken;
   const headers = {
     'Content-Type': 'application/json',
-    'X-Publisher-Token': publisherToken /*,
-    Authorization: `Basic ${authToken}`*/
+    'X-Publisher-Token': publisherToken
   };
   const subdomain = env === 'sandbox' ? 'sandbox.' : '';
   const method = 'POST';
