@@ -18,6 +18,9 @@ const payment = async (params, publisher) => {
         ? 'roku'
         : 'android';
 
+  if (receipt && receipt.receiptData) {
+    console.log(receipt.receiptData);
+  }
   const publisherToken = publisher.publisherToken;
   const authToken = publisher.authToken;
   const headers = {
