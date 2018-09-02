@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
+    "axios-debug": "0.0.4",
     "express": "^4.16.3",
     "express-basic-auth": "^1.1.5",
     "google-auth-library": "^1.6.1",

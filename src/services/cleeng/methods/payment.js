@@ -22,21 +22,21 @@ const payment = async (params, publisher) => {
         ? 'roku'
         : 'android';
 
-  if (platform === 'apple') {
-    console.log(receipt.receiptData);
-    /*
-    const receiptInfo = await verifyAppStoreReceipt(
-      receipt,
-      publisher.appStoreSharedKey
-    );*/
+  if (platform === 'apple' && isRestored) {
+    const { offers } = publisher;
+    const offer = offers.find(offer => offer.offerId === offerId);
+    if (offer && offer.isAutoRenewable === true) {
+      receipt.transactionId = await verifyAppStoreReceipt(
+        receipt.receiptData,
+        publisher.appStoreSharedKey
+      );
+    }
   }
 
   const publisherToken = publisher.publisherToken;
-  const authToken = publisher.authToken;
   const headers = {
     'Content-Type': 'application/json',
-    'X-Publisher-Token': publisherToken /*,
-    Authorization: `Basic ${authToken}`*/
+    'X-Publisher-Token': publisherToken
   };
   const subdomain = env === 'sandbox' ? 'sandbox.' : '';
   const method = 'POST';
