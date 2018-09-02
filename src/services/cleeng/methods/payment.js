@@ -1,4 +1,7 @@
 const axios = require('axios');
+const {
+  verifyAppStoreReceipt
+} = require('../../../utils/verifyAppStoreReceipt');
 
 const payment = async (params, publisher) => {
   const {
@@ -8,7 +11,8 @@ const payment = async (params, publisher) => {
     offerId,
     appType,
     order,
-    ipAddress
+    ipAddress,
+    isRestored = false
   } = params;
   const platform =
     appType &&
@@ -17,6 +21,15 @@ const payment = async (params, publisher) => {
       : appType && appType.toLowerCase() === 'roku'
         ? 'roku'
         : 'android';
+
+  if (platform === 'apple') {
+    console.log(receipt.receiptData);
+    /*
+    const receiptInfo = await verifyAppStoreReceipt(
+      receipt,
+      publisher.appStoreSharedKey
+    );*/
+  }
 
   const publisherToken = publisher.publisherToken;
   const authToken = publisher.authToken;

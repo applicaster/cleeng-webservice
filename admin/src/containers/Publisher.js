@@ -87,7 +87,11 @@ class Publisher extends Component {
   render() {
     const { classes } = this.props;
     const { _id, offers } = this.props.publisher;
-    const { name = '', publisherToken = '' } = this.state.publisher;
+    const {
+      name = '',
+      publisherToken = '',
+      appStoreSharedKey = ''
+    } = this.state.publisher;
     return (
       <div className={classes.layout}>
         <div className={classes.titleContainer}>
@@ -117,6 +121,16 @@ class Publisher extends Component {
                 margin="normal"
                 onChange={this.onTextFieldChange}
                 required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="appStoreSharedKey"
+                label="appStoreSharedKey"
+                className={classes.textField}
+                value={appStoreSharedKey}
+                margin="normal"
+                onChange={this.onTextFieldChange}
               />
             </Grid>
             <Grid item xs={12}>

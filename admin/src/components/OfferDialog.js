@@ -8,6 +8,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = theme => ({
   tableContainer: {},
@@ -46,7 +48,8 @@ class OfferDialog extends Component {
 
   onTextFieldChange = e => {
     let { offer } = this.state;
-    offer[e.target.id] = e.target.value;
+    offer[e.target.id] =
+      e.target.id === 'isAutoRenewable' ? e.target.checked : e.target.value;
     this.setState({
       okDisabled: false,
       offer
@@ -55,6 +58,7 @@ class OfferDialog extends Component {
 
   render() {
     const { classes } = this.props;
+
     const {
       authId,
       offerId,
@@ -62,6 +66,11 @@ class OfferDialog extends Component {
       appleProductId,
       androidProductId
     } = this.props.offer;
+
+    const isAutoRenewable = this.state.offer.isAutoRenewable
+      ? this.state.offer.isAutoRenewable
+      : this.props.offer.isAutoRenewable || false;
+
     return (
       <Dialog
         open={this.props.open}
@@ -126,6 +135,21 @@ class OfferDialog extends Component {
                   margin="normal"
                   onChange={this.onTextFieldChange}
                   required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id="isAutoRenewable"
+                      color="secondary"
+                      name="isAutoRenewable"
+                      value={isAutoRenewable.toString()}
+                      checked={isAutoRenewable}
+                      onChange={this.onTextFieldChange}
+                    />
+                  }
+                  label="Auto Renewable Subscription"
                 />
               </Grid>
             </Grid>
