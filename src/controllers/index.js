@@ -134,14 +134,31 @@ const subscriptions = async (req, res) => {
 
 const addSubscription = async (req, res) => {
   try {
-    const { token } = req.body;
+    const { token, couponCode = '' } = req.body;
     const cleengToken = getTokenFromJWT(token);
     req.body.customerToken = cleengToken;
     setOfferIdFromAuthId(req.body, req.publisher);
     req.body.ipAddress =
       req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const response = await cleengApi.payment(req.body, req.publisher);
-    const result = response.data;
+    let response;
+    let result;
+    if (couponCode) {
+      const { email: customerEmail } =
+        (await cleengApi.getCustomer(cleengToken)) || {};
+      const { publisherToken } = req.publisher;
+      const { offerId } = req.body;
+      const { success } = await cleengApi.applyCoupon({
+        publisherToken,
+        offerId,
+        customerEmail,
+        couponCode
+      });
+      result = success;
+    } else {
+      response = await cleengApi.payment(req.body, req.publisher);
+      result = response.data;
+    }
+
     res.status(200).send({ result });
   } catch (err) {
     console.log(err);

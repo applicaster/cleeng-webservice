@@ -9,6 +9,8 @@ const { requestPasswordReset } = require('./methods/requestPasswordReset');
 const { getEventOffer } = require('./methods/getEventOffer');
 const { getVodOffer } = require('./methods/getVodOffer');
 const { getRentalOffer } = require('./methods/getRentalOffer');
+const { applyCoupon } = require('./methods/applyCoupon');
+const { getCustomer } = require('./methods/getCustomer');
 
 module.exports = {
   generateToken,
@@ -20,5 +22,7 @@ module.exports = {
   extendTokenExpiration,
   requestPasswordReset,
   getEventOffer,
-  getVodOffer
+  getVodOffer,
+  applyCoupon,
+  getCustomer
 };
