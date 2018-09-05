@@ -24,5 +24,6 @@ module.exports = {
   getEventOffer,
   getVodOffer,
   applyCoupon,
-  getCustomer
+  getCustomer,
+  getRentalOffer
 };
