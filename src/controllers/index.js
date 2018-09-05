@@ -94,13 +94,14 @@ const subscriptions = async (req, res) => {
     );
 
     results.forEach(result => {
-      const { appleProductId, androidProductId, authId } =
+      const { appleProductId, androidProductId, authId, rokuProductId } =
         allOffers.find(offer => {
           const { offerId } = offer;
           return offerId === result.id;
         }) || {};
       result.appleProductId = appleProductId;
       result.androidProductId = androidProductId;
+      result.rokuProductId = rokuProductId;
       result.authId = authId;
     });
 

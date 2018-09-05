@@ -64,7 +64,8 @@ class OfferDialog extends Component {
       offerId,
       secretKey,
       appleProductId,
-      androidProductId
+      androidProductId,
+      rokuProductId
     } = this.props.offer;
 
     const isAutoRenewable = this.state.offer.isAutoRenewable
@@ -132,6 +133,17 @@ class OfferDialog extends Component {
                   label="androidProductId"
                   className={classes.textField}
                   defaultValue={androidProductId}
+                  margin="normal"
+                  onChange={this.onTextFieldChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="rokuProductId"
+                  label="rokuProductId"
+                  className={classes.textField}
+                  defaultValue={rokuProductId}
                   margin="normal"
                   onChange={this.onTextFieldChange}
                   required
