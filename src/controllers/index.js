@@ -66,7 +66,7 @@ const subscriptions = async (req, res) => {
           allOffers.find(offer => authId == offer.authId) || {};
         if (!offerId) {
           const error = new Error(`Invalud authId: ${authId}`);
-          error.code = '1001';
+          error.code = 1001;
           throw error;
         }
         return offerId;
