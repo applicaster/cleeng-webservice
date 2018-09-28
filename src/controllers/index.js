@@ -24,8 +24,25 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { email, password, facebookId, locale, country, currency } = req.body;
+    const {
+      email,
+      password,
+      facebookId,
+      locale: _locale = '',
+      country,
+      currency
+    } = req.body;
     const publisherToken = req.publisher.publisherToken;
+    const supportedLocales = (process.env.SUPPORTED_LOCALES || '').split(',');
+    const locale =
+      supportedLocales.indexOf(_locale) === -1
+        ? process.env.DEFAULT_LOCALE || 'en_US'
+        : _locale;
+    if (supportedLocales.indexOf(_locale) === -1) {
+      console.log(
+        `Locale: ${_locale} not supported. using default locale: ${locale}`
+      );
+    }
     const customerData = {
       email,
       password,
