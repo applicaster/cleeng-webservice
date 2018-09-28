@@ -2,7 +2,7 @@ const axios = require('axios');
 const config = require('../config');
 
 const post = async (path, params) => {
-  const url = process.CLEENG_BASE_URL || `${config.baseUrl}`;
+  const url = process.env.CLEENG_BASE_URL || `${config.baseUrl}`;
   const method = 'post';
   const id = 1;
   const data = { method: path, params, id, 'json-rpc': '2.0' };
