@@ -40,7 +40,8 @@ const payment = async (params, publisher) => {
   };
   const subdomain = env === 'sandbox' ? 'sandbox.' : '';
   const method = 'POST';
-  const url = `https://${subdomain}cleeng.com/${platform}/payment`;
+  const url = `https://${subdomain}${process.env.CLEENG_PAYMENT_BASE_URL ||
+    'cleeng.com'}/${platform}/payment`;
   const data = { customerToken, offerId, receipt, appType, order };
   return axios({ headers, url, method, data });
 };
