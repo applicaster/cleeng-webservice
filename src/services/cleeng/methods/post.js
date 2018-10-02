@@ -8,7 +8,7 @@ const post = async (path, params, publisher) => {
   const method = 'post';
   const id = 1;
   const data = { method: path, params, id, 'json-rpc': '2.0' };
-  if (publisher.logActive) {
+  if (publisher && publisher.logActive) {
     const body = JSON.stringify(data);
     await logRequest(publisher, { url, method, body });
   }
