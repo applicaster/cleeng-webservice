@@ -1,4 +1,5 @@
 const Publisher = require('../models/publisher');
+const Reqlog = require('../models/reqlog');
 
 const getPublishers = async (req, res) => {
   try {
@@ -33,4 +34,35 @@ const updatePublisher = async (req, res) => {
   }
 };
 
-module.exports = { getPublishers, updatePublisher };
+const getPublisherLogs = async (req, res) => {
+  try {
+    const { publisherId } = req.params;
+
+    const result = await Reqlog.find({ publisherId }).sort([['reqtime', '-1']]);
+
+    res.status(200).send({ result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
+
+const clearPublisherLogs = async (req, res) => {
+  try {
+    const { publisherId } = req.params;
+
+    const result = await Reqlog.deleteMany({ publisherId });
+
+    res.status(200).send({ result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send(err);
+  }
+};
+
+module.exports = {
+  getPublishers,
+  updatePublisher,
+  getPublisherLogs,
+  clearPublisherLogs
+};

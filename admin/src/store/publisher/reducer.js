@@ -2,7 +2,8 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
-  publishers: []
+  publishers: [],
+  logs: []
 });
 
 export default function reduce(state = initialState, action = {}) {
@@ -21,8 +22,11 @@ export default function reduce(state = initialState, action = {}) {
         publishers[index] = action.publisher;
       }
       return state.merge({ publishers });
+    case types.PUBLISHER_LOGS_UPDATED:
+      return state.merge({ logs: action.logs });
     case types.PUBLISHER_UPDATE_FAILED:
     case types.PUBLISHERS_FETCH_FAILED:
+    case types.PUBLISHER_LOGS_UPDATED_FAILED:
       return state.merge({ error: action.error });
     case types.CLEAR_ERROR:
       return state.merge({ error: {} });

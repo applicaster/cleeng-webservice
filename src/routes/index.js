@@ -26,6 +26,16 @@ module.exports = () => {
 
   router.post('/publisher', dashboardAuth, dashboardController.updatePublisher);
   router.get('/publishers', dashboardAuth, dashboardController.getPublishers);
+  router.get(
+    '/publisher/:publisherId/logs',
+    dashboardAuth,
+    dashboardController.getPublisherLogs
+  );
+  router.delete(
+    '/publisher/:publisherId/logs',
+    dashboardAuth,
+    dashboardController.clearPublisherLogs
+  );
 
   return router;
 };

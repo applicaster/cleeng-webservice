@@ -1,7 +1,7 @@
 const { post } = require('./post');
 
-const getEventOffer = async data => {
-  return post('getEventOffer', data);
+const getEventOffer = async (data, publisher) => {
+  return post('getEventOffer', data, publisher);
 };
 
 module.exports = { getEventOffer };

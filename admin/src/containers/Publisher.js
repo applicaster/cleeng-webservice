@@ -8,6 +8,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import OffersTable from '../components/OffersTable';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import * as publisherActions from '../store/publisher/actions';
 
 const styles = theme => ({
@@ -60,7 +63,8 @@ class Publisher extends Component {
   onTextFieldChange = e => {
     let { publisher: _publisher } = this.state;
     const publisher = { ..._publisher };
-    publisher[e.target.id] = e.target.value;
+    publisher[e.target.id] =
+      e.target.id === 'logActive' ? e.target.checked : e.target.value;
     this.setState({
       okDisabled: false,
       publisher
@@ -84,13 +88,19 @@ class Publisher extends Component {
     this.props.dispatch(publisherActions.updatePublisher(publisher));
   };
 
+  onLogsClick = () => {
+    const { _id = '' } = this.state.publisher;
+    this.props.history.push(`/publisher/${_id}/logs`);
+  };
+
   render() {
     const { classes } = this.props;
     const { _id, offers } = this.props.publisher;
     const {
       name = '',
       publisherToken = '',
-      appStoreSharedKey = ''
+      appStoreSharedKey = '',
+      logActive = false
     } = this.state.publisher;
     return (
       <div className={classes.layout}>
@@ -134,6 +144,21 @@ class Publisher extends Component {
               />
             </Grid>
             <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    id="logActive"
+                    color="secondary"
+                    name="logActive"
+                    value={logActive.toString()}
+                    checked={logActive}
+                    onChange={this.onTextFieldChange}
+                  />
+                }
+                label="Logs Active"
+              />
+            </Grid>
+            <Grid item xs={12}>
               <OffersTable
                 offers={offers}
                 onOffersChanged={this.onOffersChanged}
@@ -152,6 +177,9 @@ class Publisher extends Component {
           </Button>
           <Button color="primary" onClick={this.onCancelClick}>
             Cancel
+          </Button>
+          <Button color="primary" onClick={this.onLogsClick}>
+            Logs
           </Button>
         </footer>
       </div>

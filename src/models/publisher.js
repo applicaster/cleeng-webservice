@@ -9,7 +9,8 @@ const publisherSchema = new Schema({
   offers: Object,
   updatedAt: Date,
   updatedBy: String,
-  appStoreSharedKey: String
+  appStoreSharedKey: String,
+  logActive: { type: Boolean, default: false }
 });
 
 const Publisher = mongoose.model('Publisher', publisherSchema);

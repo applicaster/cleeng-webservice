@@ -3,6 +3,8 @@ const {
   verifyAppStoreReceipt
 } = require('../../../utils/verifyAppStoreReceipt');
 
+const { logRequest } = require('../../../utils/logRequest');
+
 const payment = async (params, publisher) => {
   const {
     env = 'production',
@@ -43,6 +45,18 @@ const payment = async (params, publisher) => {
   const url = `https://${subdomain}${process.env.CLEENG_PAYMENT_BASE_URL ||
     'cleeng.com'}/${platform}/payment`;
   const data = { customerToken, offerId, receipt, appType, order };
+
+  if (publisher.logActive) {
+    const body = JSON.stringify(data);
+    const _headers = JSON.stringify(headers);
+    await logRequest(publisher, {
+      url,
+      method,
+      body,
+      headers: _headers
+    });
+  }
+
   return axios({ headers, url, method, data });
 };
 

@@ -7,7 +7,7 @@ const login = async (req, res) => {
     const { email: customerEmail, password, facebookId } = req.body;
     const publisherToken = req.publisher.publisherToken;
     const data = { publisherToken, customerEmail, password, facebookId };
-    const result = await cleengApi.generateToken(data);
+    const result = await cleengApi.generateToken(data, req.publisher);
     const { token: cleengToken } = result;
     const tokens = await createOffersJWT(
       cleengToken,
@@ -52,7 +52,7 @@ const register = async (req, res) => {
       currency
     };
     const data = { publisherToken, customerData };
-    const result = await cleengApi.registerCustomer(data);
+    const result = await cleengApi.registerCustomer(data, req.publisher);
     const { token: cleengToken } = result;
     const tokens = await createOffersJWT(
       cleengToken,
@@ -93,19 +93,22 @@ const subscriptions = async (req, res) => {
     const results = await Promise.all(
       offers.map(offerId => {
         if (offerId.toLowerCase().startsWith('p')) {
-          return cleengApi.getPassOffer({ offerId });
+          return cleengApi.getPassOffer({ offerId }, req.publisher);
         } else if (offerId.toLowerCase().startsWith('e')) {
-          return cleengApi.getEventOffer({ offerId });
+          return cleengApi.getEventOffer({ offerId }, req.publisher);
         } else if (offerId.toLowerCase().startsWith('a')) {
           const { publisherToken } = req.publisher;
-          return cleengApi.getVodOffer({
-            offerIdString: offerId,
-            publisherToken
-          });
+          return cleengApi.getVodOffer(
+            {
+              offerIdString: offerId,
+              publisherToken
+            },
+            req.publisher
+          );
         } else if (offerId.toLowerCase().startsWith('r')) {
-          return cleengApi.getRentalOffer({ offerId, videoId });
+          return cleengApi.getRentalOffer({ offerId, videoId }, req.publisher);
         } else {
-          return cleengApi.getSubscriptionOffer({ offerId });
+          return cleengApi.getSubscriptionOffer({ offerId }, req.publisher);
         }
       })
     );
@@ -128,11 +131,14 @@ const subscriptions = async (req, res) => {
       const customerToken = getTokenFromJWT(token);
       const accessResults = await Promise.all(
         offers.map(offerId => {
-          return cleengApi.getAccessStatus({
-            customerToken,
-            offerId,
-            ipAddress
-          });
+          return cleengApi.getAccessStatus(
+            {
+              customerToken,
+              offerId,
+              ipAddress
+            },
+            req.publisher
+          );
         })
       );
 
@@ -162,15 +168,18 @@ const addSubscription = async (req, res) => {
     let result;
     if (couponCode) {
       const { email: customerEmail } =
-        (await cleengApi.getCustomer(cleengToken)) || {};
+        (await cleengApi.getCustomer(cleengToken, req.publisher)) || {};
       const { publisherToken } = req.publisher;
       const { offerId } = req.body;
-      const { success } = await cleengApi.applyCoupon({
-        publisherToken,
-        offerId,
-        customerEmail,
-        couponCode
-      });
+      const { success } = await cleengApi.applyCoupon(
+        {
+          publisherToken,
+          offerId,
+          customerEmail,
+          couponCode
+        },
+        req.publisher
+      );
       result = success;
     } else {
       response = await cleengApi.payment(req.body, req.publisher);
@@ -192,7 +201,7 @@ const extendToken = async (req, res) => {
     const publisherToken = req.publisher.publisherToken;
     const extensionTime = process.env.TOKEN_EXPIRE_MINUTES * 60;
     const data = { customerToken, publisherToken, extensionTime };
-    await cleengApi.extendTokenExpiration(data);
+    await cleengApi.extendTokenExpiration(data, req.publisher);
     const tokens = await createOffersJWT(
       customerToken,
       req.publisher,
@@ -211,7 +220,7 @@ const passwordReset = async (req, res) => {
     const { email: customerEmail } = req.body;
     const publisherToken = req.publisher.publisherToken;
     const data = { customerEmail, publisherToken };
-    const result = await cleengApi.requestPasswordReset(data);
+    const result = await cleengApi.requestPasswordReset(data, req.publisher);
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
