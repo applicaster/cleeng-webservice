@@ -32,7 +32,7 @@ const register = async (req, res) => {
       country,
       currency
     } = req.body;
-    const publisherToken = 'Zt1G-h59ZzQ9i4ECWojQfbmE8GmmEmVdb9VIzGgTnXqGc3Gq'; //req.publisher.publisherToken;
+    const publisherToken = req.publisher.publisherToken;
     const supportedLocales = (process.env.SUPPORTED_LOCALES || '').split(',');
     const locale =
       supportedLocales.indexOf(_locale) === -1
