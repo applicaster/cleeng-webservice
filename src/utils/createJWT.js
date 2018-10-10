@@ -36,13 +36,19 @@ const createOffersJWT = async (cleengToken, publisher, ipAddress) => {
     })
   );
 
-  const activeOffers = offersStatuses.filter(offer => {
-    const { accessGranted } = offer;
-    return accessGranted === true;
-  });
+  const activeOffers = offersStatuses
+    .map((status, i) => {
+      const { offerId } = allOffers[i];
+      status.offerId = offerId;
+      return status;
+    })
+    .filter(status => {
+      const { accessGranted } = status;
+      return accessGranted === true;
+    });
 
-  activeOffers.forEach((obj, index) => {
-    const { offerId } = allOffers[index];
+  activeOffers.forEach(obj => {
+    const { offerId } = obj;
     const { secretKey, authId } =
       allOffers.find(aOffer => {
         return aOffer.offerId === offerId;
