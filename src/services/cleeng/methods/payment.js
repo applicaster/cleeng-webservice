@@ -22,7 +22,9 @@ const payment = async (params, publisher) => {
       ? 'apple'
       : appType && appType.toLowerCase() === 'roku'
         ? 'roku'
-        : 'android';
+        : appType && appType.toLowerCase() === 'amazon'
+          ? 'amazon'
+          : 'android';
 
   if (platform === 'apple' && isRestored) {
     const { offers } = publisher;
