@@ -136,7 +136,7 @@ class Publisher extends Component {
             <Grid item xs={12}>
               <TextField
                 id="appStoreSharedKey"
-                label="appStoreSharedKey"
+                label="iTunes AppStoreSharedKey"
                 className={classes.textField}
                 value={appStoreSharedKey}
                 margin="normal"
