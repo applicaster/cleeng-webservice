@@ -2,9 +2,9 @@ const moment = require('moment');
 const jsonwebtoken = require('jsonwebtoken');
 const api = require('../services/cleeng');
 
-const createJWT = (token, publisher, secretKey) => {
+const createJWT = (token, publisher, secretKey, expiresAt) => {
   const iss = publisher.name;
-  const exp = moment()
+  const exp = expiresAt ? expiresAt : moment()
     .add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes')
     .unix();
   const payload = {
@@ -48,14 +48,20 @@ const createOffersJWT = async (cleengToken, publisher, ipAddress) => {
     });
 
   activeOffers.forEach(obj => {
-    const { offerId } = obj;
+    const { offerId, expiresAt: _expiresAt } = obj;
+    let expiresAt;
+    try {
+      expiresAt = parseInt(_expiresAt);
+    } catch (err) {
+
+    }
     const { secretKey, authId } =
       allOffers.find(aOffer => {
         return aOffer.offerId === offerId;
       }) || {};
 
     if (secretKey) {
-      const token = createJWT(cleengToken, publisher, secretKey);
+      const token = createJWT(cleengToken, publisher, secretKey, expiresAt);
       result.push({ offerId, token, authId });
     }
   });
