@@ -11,6 +11,8 @@ const { getVodOffer } = require('./methods/getVodOffer');
 const { getRentalOffer } = require('./methods/getRentalOffer');
 const { applyCoupon } = require('./methods/applyCoupon');
 const { getCustomer } = require('./methods/getCustomer');
+const { submitConsent } = require('./methods/submitConsent');
+const { updateCustomerEmail } = require('./methods/updateCustomerEmail');
 
 module.exports = {
   generateToken,
@@ -25,5 +27,7 @@ module.exports = {
   getVodOffer,
   applyCoupon,
   getCustomer,
-  getRentalOffer
+  getRentalOffer,
+  submitConsent,
+  updateCustomerEmail
 };
