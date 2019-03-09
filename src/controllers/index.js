@@ -74,8 +74,8 @@ const subscriptions = async (req, res) => {
     let offers = Array.isArray(_offers)
       ? _offers
       : _offers
-        ? _offers.split(',')
-        : allOffers.map(offer => offer.offerId);
+      ? _offers.split(',')
+      : allOffers.map(offer => offer.offerId);
 
     if (byAuthId == 1) {
       offers = offers.map(authId => {
@@ -218,9 +218,63 @@ const extendToken = async (req, res) => {
 const passwordReset = async (req, res) => {
   try {
     const { email: customerEmail } = req.body;
+
     const publisherToken = req.publisher.publisherToken;
     const data = { customerEmail, publisherToken };
     const result = await cleengApi.requestPasswordReset(data, req.publisher);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
+const submitConsent = async (req, res) => {
+  try {
+    const { token, consentType: name, state = 'accepted', version } = req.body;
+
+    const cleengToken = getTokenFromJWT(token);
+    const { email: customerEmail } =
+      (await cleengApi.getCustomer(cleengToken, req.publisher)) || {};
+
+    const publisherToken = req.publisher.publisherToken;
+    const data = { customerEmail, publisherToken, name, state, version };
+    const result = await cleengApi.submitConsent(data, req.publisher);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
+const updateCustomerEmail = async (req, res) => {
+  try {
+    const { token, newEmail } = req.body;
+
+    const cleengToken = getTokenFromJWT(token);
+    const { email: customerEmail } =
+      (await cleengApi.getCustomer(cleengToken, req.publisher)) || {};
+
+    const publisherToken = req.publisher.publisherToken;
+    const data = { customerEmail, newEmail, publisherToken };
+    const result = await cleengApi.updateCustomerEmail(data, req.publisher);
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
+const getCustomer = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    const cleengToken = getTokenFromJWT(token);
+    const result =
+      (await cleengApi.getCustomer(cleengToken, req.publisher)) || {};
     res.status(200).send(result);
   } catch (err) {
     console.log(err);
@@ -235,5 +289,8 @@ module.exports = {
   subscriptions,
   addSubscription,
   extendToken,
-  passwordReset
+  passwordReset,
+  submitConsent,
+  updateCustomerEmail,
+  getCustomer
 };
