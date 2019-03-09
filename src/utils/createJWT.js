@@ -4,9 +4,8 @@ const api = require('../services/cleeng');
 
 const createJWT = (token, publisher, secretKey, expiresAt) => {
   const iss = publisher.name;
-  const exp = expiresAt ? expiresAt : moment()
-    .add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes')
-    .unix();
+  //const exp = expiresAt ? expiresAt : moment()
+  const exp = moment().add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes').unix();
   const payload = {
     iss,
     exp,
