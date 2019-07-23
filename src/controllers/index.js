@@ -283,6 +283,25 @@ const getCustomer = async (req, res) => {
   }
 };
 
+const generateCustomerToken = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const result =
+      (await cleengApi.generateCustomerToken(email, req.publisher)) || {};
+    const { token: cleengToken } = result;
+    const tokens = await createOffersJWT(
+      cleengToken,
+      req.publisher,
+      req.headers['x-forwarded-for'] || req.connection.remoteAddress
+    );
+    res.status(200).send(tokens);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -292,5 +311,6 @@ module.exports = {
   passwordReset,
   submitConsent,
   updateCustomerEmail,
-  getCustomer
+  getCustomer,
+  generateCustomerToken
 };

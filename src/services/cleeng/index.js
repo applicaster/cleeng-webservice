@@ -13,6 +13,7 @@ const { applyCoupon } = require('./methods/applyCoupon');
 const { getCustomer } = require('./methods/getCustomer');
 const { submitConsent } = require('./methods/submitConsent');
 const { updateCustomerEmail } = require('./methods/updateCustomerEmail');
+const { generateCustomerToken } = require('./methods/generateCustomerToken');
 
 module.exports = {
   generateToken,
@@ -29,5 +30,6 @@ module.exports = {
   getCustomer,
   getRentalOffer,
   submitConsent,
-  updateCustomerEmail
+  updateCustomerEmail,
+  generateCustomerToken
 };
