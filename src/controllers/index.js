@@ -82,7 +82,7 @@ const subscriptions = async (req, res) => {
         const { offerId } =
           allOffers.find(offer => authId == offer.authId) || {};
         if (!offerId) {
-          const error = new Error(`Invalud authId: ${authId}`);
+          const error = new Error(`Invalid authId: ${authId}`);
           error.code = 1001;
           throw error;
         }
@@ -114,7 +114,13 @@ const subscriptions = async (req, res) => {
     );
 
     results.forEach(result => {
-      const { appleProductId, androidProductId, authId, rokuProductId, freeAccessLoggedInAuthID } =
+      const {
+        appleProductId,
+        androidProductId,
+        authId,
+        rokuProductId,
+        freeAccessLoggedInAuthID
+      } =
         allOffers.find(offer => {
           const { offerId } = offer;
           return offerId === result.id;
