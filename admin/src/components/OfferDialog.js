@@ -168,7 +168,7 @@ class OfferDialog extends Component {
               <Grid item xs={12}>
                 <TextField
                   id="freeAccessLoggedInAuthID"
-                  label="freeAccessLoggedInAuthID"
+                  label="free Access LoggedIn AuthID"
                   className={classes.textField}
                   defaultValue={freeAccessLoggedInAuthID}
                   margin="normal"
