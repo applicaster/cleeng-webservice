@@ -114,7 +114,7 @@ const subscriptions = async (req, res) => {
     );
 
     results.forEach(result => {
-      const { appleProductId, androidProductId, authId, rokuProductId } =
+      const { appleProductId, androidProductId, authId, rokuProductId, freeAccessLoggedInAuthID } =
         allOffers.find(offer => {
           const { offerId } = offer;
           return offerId === result.id;
@@ -123,6 +123,7 @@ const subscriptions = async (req, res) => {
       result.androidProductId = androidProductId;
       result.rokuProductId = rokuProductId;
       result.authId = authId;
+      result.freeAccessLoggedInAuthID = freeAccessLoggedInAuthID;
     });
 
     if (token) {

@@ -65,7 +65,8 @@ class OfferDialog extends Component {
       secretKey,
       appleProductId,
       androidProductId,
-      rokuProductId
+      rokuProductId,
+      freeAccessLoggedInAuthID
     } = this.props.offer;
 
     const isAutoRenewable = this.state.offer.isAutoRenewable
@@ -162,6 +163,17 @@ class OfferDialog extends Component {
                     />
                   }
                   label="Auto Renewable Subscription"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="freeAccessLoggedInAuthID"
+                  label="freeAccessLoggedInAuthID"
+                  className={classes.textField}
+                  defaultValue={freeAccessLoggedInAuthID}
+                  margin="normal"
+                  onChange={this.onTextFieldChange}
+                  required
                 />
               </Grid>
             </Grid>
