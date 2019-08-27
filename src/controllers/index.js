@@ -201,6 +201,74 @@ const addSubscription = async (req, res) => {
   }
 };
 
+const registerSubscription = async ({publisher, body}) => {
+  try {
+    const {
+      cleengToken,
+      couponCode = '',
+      offerId,
+      publisherToken
+    } = body;
+
+    if (couponCode) {
+      const { email: customerEmail } =
+      (await cleengApi.getCustomer(cleengToken, publisher)) || {};
+
+      const { success } = await cleengApi.applyCoupon({
+          publisherToken,
+          offerId,
+          customerEmail,
+          couponCode
+        },
+        publisher
+      );
+      return success;
+    }
+
+    const { data } = await cleengApi.payment(body, publisher);
+    return { ...data, offerId };
+
+  } catch (err) {
+    console.log(err);
+    return err.message;
+  }
+};
+
+const restoreSubscriptions = async ({ publisher, body, headers, connection }, res) => {
+  try {
+    const { offers, publisherToken } = publisher;
+    const { token, receipts } = body;
+    const cleengToken = getTokenFromJWT(token);
+
+    const ipAddress =
+      headers['x-forwarded-for'] || connection.remoteAddress;
+
+    const result = await Promise.all(receipts.map(receipt => {
+
+        const { productId } = receipt;
+        const { offerId } = offers.find(({ androidProductId, appleProductId }) => (productId === androidProductId) || (productId === appleProductId));
+
+        return registerSubscription({
+          publisher,
+          body: {
+            customerToken: cleengToken,
+            receipt,
+            offerId,
+            publisherToken,
+            ipAddress
+          }
+        });
+      })
+    );
+
+    res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
 const extendToken = async (req, res) => {
   try {
     const { token } = req.body;
@@ -314,6 +382,7 @@ module.exports = {
   register,
   subscriptions,
   addSubscription,
+  restoreSubscriptions,
   extendToken,
   passwordReset,
   submitConsent,
