@@ -73,7 +73,8 @@ const register = async (req, res) => {
 
 const subscriptions = async (req, res) => {
   try {
-    const { offers: allOffers } = req.publisher;
+    const { offers: publisherOffers } = req.publisher;
+    const allOffers = publisherOffers.filter(offer => offer.hideOffer !== true);
     const { offers: _offers = '', token, byAuthId = 0, videoId } = req.body;
     let offers = Array.isArray(_offers)
       ? _offers
