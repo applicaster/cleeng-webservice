@@ -5,7 +5,9 @@ const api = require('../services/cleeng');
 const createJWT = (token, publisher, secretKey, expiresAt) => {
   const iss = publisher.name;
   //const exp = expiresAt ? expiresAt : moment()
-  const exp = moment().add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes').unix();
+  const exp = moment()
+    .add(process.env.TOKEN_EXPIRE_MINUTES, 'minutes')
+    .unix();
   const payload = {
     iss,
     exp,
@@ -28,11 +30,15 @@ const createOffersJWT = async (cleengToken, publisher, ipAddress) => {
   const { offers: allOffers } = publisher;
 
   const offersStatuses = await Promise.all(
-    allOffers.map(offer => {
-      const { offerId } = offer;
-      const customerToken = cleengToken;
-      return api.getAccessStatus({ offerId, customerToken, ipAddress });
-    })
+    allOffers
+      .filter(offer => {
+        return !offer.freeAccessLoggedInAuthID;
+      })
+      .map(offer => {
+        const { offerId } = offer;
+        const customerToken = cleengToken;
+        return api.getAccessStatus({ offerId, customerToken, ipAddress });
+      })
   );
 
   const activeOffers = offersStatuses
@@ -51,9 +57,7 @@ const createOffersJWT = async (cleengToken, publisher, ipAddress) => {
     let expiresAt;
     try {
       expiresAt = parseInt(_expiresAt);
-    } catch (err) {
-
-    }
+    } catch (err) {}
     const { secretKey, authId } =
       allOffers.find(aOffer => {
         return aOffer.offerId === offerId;

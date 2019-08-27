@@ -48,8 +48,12 @@ class OfferDialog extends Component {
 
   onTextFieldChange = e => {
     let { offer } = this.state;
-    offer[e.target.id] =
-      e.target.id === 'isAutoRenewable' ? e.target.checked : e.target.value;
+    if (e.target.id === 'displayOffer') {
+      offer.hideOffer = !e.target.checked;
+    } else {
+      offer[e.target.id] =
+        e.target.id === 'isAutoRenewable' ? e.target.checked : e.target.value;
+    }
     this.setState({
       okDisabled: false,
       offer
@@ -72,6 +76,11 @@ class OfferDialog extends Component {
     const isAutoRenewable = this.state.offer.isAutoRenewable
       ? this.state.offer.isAutoRenewable
       : this.props.offer.isAutoRenewable || false;
+
+    const hideOffer =
+      this.state.offer.hideOffer !== undefined
+        ? this.state.offer.hideOffer
+        : this.props.offer.hideOffer || false;
 
     return (
       <Dialog
@@ -174,6 +183,21 @@ class OfferDialog extends Component {
                   margin="normal"
                   onChange={this.onTextFieldChange}
                   required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id="displayOffer"
+                      color="secondary"
+                      name="displayOffer"
+                      value={(hideOffer !== true).toString()}
+                      checked={hideOffer !== true}
+                      onChange={this.onTextFieldChange}
+                    />
+                  }
+                  label="Display Offer"
                 />
               </Grid>
             </Grid>

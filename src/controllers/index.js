@@ -1,5 +1,9 @@
 const cleengApi = require('../services/cleeng');
-const { createOffersJWT, getTokenFromJWT } = require('../utils/createJWT');
+const {
+  createJWT,
+  createOffersJWT,
+  getTokenFromJWT
+} = require('../utils/createJWT');
 const { setOfferIdFromAuthId } = require('../utils/setOfferIdFromAuthId');
 
 const login = async (req, res) => {
@@ -69,7 +73,8 @@ const register = async (req, res) => {
 
 const subscriptions = async (req, res) => {
   try {
-    const { offers: allOffers } = req.publisher;
+    const { offers: publisherOffers } = req.publisher;
+    const allOffers = publisherOffers.filter(offer => offer.hideOffer !== true);
     const { offers: _offers = '', token, byAuthId = 0, videoId } = req.body;
     let offers = Array.isArray(_offers)
       ? _offers
@@ -309,6 +314,24 @@ const generateCustomerToken = async (req, res) => {
   }
 };
 
+const getFreeAccessToken = async (req, res) => {
+  try {
+    const { authId, userToken } = req.body;
+    const freeOffer = req.publisher.offers.find(offer => {
+      return offer.freeAccessLoggedInAuthID === authId;
+    });
+    if (freeOffer) {
+      const token = createJWT(userToken, req.publisher);
+      return res.status(200).send(token);
+    }
+    res.status(404).send();
+  } catch (err) {
+    console.log(err);
+    const { code, message } = err;
+    res.status(500).send({ code, message });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -319,5 +342,6 @@ module.exports = {
   submitConsent,
   updateCustomerEmail,
   getCustomer,
-  generateCustomerToken
+  generateCustomerToken,
+  getFreeAccessToken
 };
