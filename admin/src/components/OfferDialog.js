@@ -77,7 +77,6 @@ class OfferDialog extends Component {
       ? this.state.offer.isAutoRenewable
       : this.props.offer.isAutoRenewable || false;
 
-    console.log(this.state.offer.hideOffer);
     const hideOffer =
       this.state.offer.hideOffer !== undefined
         ? this.state.offer.hideOffer
