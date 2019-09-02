@@ -6,6 +6,7 @@ const {
   register,
   subscriptions,
   addSubscription,
+  restoreSubscriptions,
   extendToken,
   passwordReset,
   submitConsent,
@@ -26,6 +27,7 @@ module.exports = () => {
   router.post('/register', publisherMiddleWare, register);
   router.post('/subscriptions', publisherMiddleWare, subscriptions);
   router.post('/subscription', publisherMiddleWare, addSubscription);
+  router.post('/restoreSubscriptions', publisherMiddleWare, restoreSubscriptions);
   router.post('/extendToken', publisherMiddleWare, extendToken);
   router.post('/passwordReset', publisherMiddleWare, passwordReset);
   router.post('/submitConsent', publisherMiddleWare, submitConsent);
