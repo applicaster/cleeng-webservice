@@ -12,7 +12,8 @@ const {
   submitConsent,
   updateCustomerEmail,
   getCustomer,
-  generateCustomerToken
+  generateCustomerToken,
+  getFreeAccessToken
 } = require('../controllers');
 
 const dashboardController = require('../controllers/dashboard.controller');
@@ -33,6 +34,7 @@ module.exports = () => {
   router.post('/updateCustomerEmail', publisherMiddleWare, updateCustomerEmail);
   router.post('/getCustomer', publisherMiddleWare, getCustomer);
   router.post('/generateCustomerToken', publisherMiddleWare, generateCustomerToken);  
+  router.post('/getFreeAccessToken', publisherMiddleWare, getFreeAccessToken);
 
   router.post('/publisher', dashboardAuth, dashboardController.updatePublisher);
   router.get('/publishers', dashboardAuth, dashboardController.getPublishers);
