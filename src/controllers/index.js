@@ -1,5 +1,6 @@
 const cleengApi = require('../services/cleeng');
 const { createOffersJWT, getTokenFromJWT } = require('../utils/createJWT');
+const { registerSubscription } = require('../utils/registerSubscription');
 const { setOfferIdFromAuthId } = require('../utils/setOfferIdFromAuthId');
 
 const login = async (req, res) => {
@@ -201,43 +202,10 @@ const addSubscription = async (req, res) => {
   }
 };
 
-const registerSubscription = async ({publisher, body}) => {
-  try {
-    const {
-      cleengToken,
-      couponCode = '',
-      offerId,
-      publisherToken
-    } = body;
-
-    if (couponCode) {
-      const { email: customerEmail } =
-      (await cleengApi.getCustomer(cleengToken, publisher)) || {};
-
-      const { success } = await cleengApi.applyCoupon({
-          publisherToken,
-          offerId,
-          customerEmail,
-          couponCode
-        },
-        publisher
-      );
-      return success;
-    }
-
-    const { data } = await cleengApi.payment(body, publisher);
-    return { ...data, offerId };
-
-  } catch (err) {
-    console.log(err);
-    return err.message;
-  }
-};
-
 const restoreSubscriptions = async ({ publisher, body, headers, connection }, res) => {
   try {
     const { offers, publisherToken } = publisher;
-    const { token, receipts } = body;
+    const { token, receipts, appType } = body;
     const cleengToken = getTokenFromJWT(token);
 
     const ipAddress =
@@ -252,6 +220,7 @@ const restoreSubscriptions = async ({ publisher, body, headers, connection }, re
           publisher,
           body: {
             customerToken: cleengToken,
+            appType,
             receipt,
             offerId,
             publisherToken,
