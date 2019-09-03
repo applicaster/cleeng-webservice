@@ -1,0 +1,21 @@
+on: release
+name: Deploy to Heroku
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Build with NPM
+      uses: actions/npm@master
+      with:
+        args: install
+    
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+        HEROKU_APP: ${{secrets.HEROKU_APP}}
+      run:
+        git push https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/${{secrets.HEROKU_APP}}.git master
+        
