@@ -7,6 +7,11 @@ jobs:
     steps:
     - uses: actions/checkout@master
 
+    - name: Check tag
+    - uses: actions/bin/filter@master
+      with:
+        args: tag v*
+
     - name: Build with NPM
       uses: actions/npm@master
       with:
@@ -17,5 +22,4 @@ jobs:
         HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
         HEROKU_APP: ${{secrets.HEROKU_APP}}
       run:
-        git push https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/${{secrets.HEROKU_APP}}.git master
-        
+        git push https://heroku:${{secrets.HEROKU_API_KEY}}@git.heroku.com/${{secrets.HEROKU_APP}}.git HEAD:master
