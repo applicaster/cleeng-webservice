@@ -8,7 +8,7 @@ jobs:
     - uses: actions/checkout@master
 
     - name: Check tag
-    - uses: actions/bin/filter@master
+      uses: actions/bin/filter@master
       with:
         args: tag v*
 
