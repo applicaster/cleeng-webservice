@@ -210,7 +210,7 @@ const addSubscription = async (req, res) => {
 const restoreSubscriptions = async ({ publisher, body, headers, connection }, res) => {
   try {
     const { offers, publisherToken } = publisher;
-    const { token, receipts, appType } = body;
+    const { token, receiptData, appType, receipts } = body;
     const cleengToken = getTokenFromJWT(token);
 
     const ipAddress =
@@ -220,6 +220,8 @@ const restoreSubscriptions = async ({ publisher, body, headers, connection }, re
 
         const { productId } = receipt;
         const { offerId } = offers.find(({ androidProductId, appleProductId }) => (productId === androidProductId) || (productId === appleProductId));
+
+        receipt = {...receipt, receiptData};
 
         return registerSubscription({
           publisher,
