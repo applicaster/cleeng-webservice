@@ -50,9 +50,13 @@ class OfferDialog extends Component {
     let { offer } = this.state;
     if (e.target.id === 'displayOffer') {
       offer.hideOffer = !e.target.checked;
+    } else if (e.target.id === 'should_display_free_ribbon') {
+      offer.should_hide_free_ribbon = !e.target.checked;
     } else {
       offer[e.target.id] =
-        e.target.id === 'isAutoRenewable' ? e.target.checked : e.target.value;
+        ['isAutoRenewable', 'is_voucher_promoted'].indexOf(e.target.id) > -1
+          ? e.target.checked
+          : e.target.value;
     }
     this.setState({
       okDisabled: false,
@@ -81,6 +85,16 @@ class OfferDialog extends Component {
       this.state.offer.hideOffer !== undefined
         ? this.state.offer.hideOffer
         : this.props.offer.hideOffer || false;
+
+    const should_hide_free_ribbon =
+      this.state.offer.should_hide_free_ribbon !== undefined
+        ? this.state.offer.should_hide_free_ribbon
+        : this.props.offer.should_hide_free_ribbon || false;
+
+    const is_voucher_promoted =
+      this.state.offer.is_voucher_promoted !== undefined
+        ? this.state.offer.is_voucher_promoted
+        : this.props.offer.is_voucher_promoted || false;
 
     return (
       <Dialog
@@ -198,6 +212,37 @@ class OfferDialog extends Component {
                     />
                   }
                   label="Display Offer"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id="is_voucher_promoted"
+                      color="secondary"
+                      name="is_voucher_promoted"
+                      value={is_voucher_promoted.toString()}
+                      checked={is_voucher_promoted}
+                      onChange={this.onTextFieldChange}
+                    />
+                  }
+                  label="Promoted Item"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id="should_display_free_ribbon"
+                      color="secondary"
+                      name="should_display_free_ribbon"
+                      value={(should_hide_free_ribbon !== true).toString()}
+                      checked={should_hide_free_ribbon !== true}
+                      onChange={this.onTextFieldChange}
+                    />
+                  }
+                  label="Display promotion asset"
                 />
               </Grid>
             </Grid>
