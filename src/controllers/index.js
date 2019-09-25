@@ -125,7 +125,9 @@ const subscriptions = async (req, res) => {
         androidProductId,
         authId,
         rokuProductId,
-        freeAccessLoggedInAuthID
+        freeAccessLoggedInAuthID,
+        should_hide_free_ribbon = false,
+        is_voucher_promoted = false
       } =
         allOffers.find(offer => {
           const { offerId } = offer;
@@ -136,6 +138,8 @@ const subscriptions = async (req, res) => {
       result.rokuProductId = rokuProductId;
       result.authId = authId;
       result.freeAccessLoggedInAuthID = freeAccessLoggedInAuthID;
+      result.is_voucher_promoted = is_voucher_promoted;
+      result.should_hide_free_ribbon = should_hide_free_ribbon;
     });
 
     if (token) {
@@ -207,21 +211,26 @@ const addSubscription = async (req, res) => {
   }
 };
 
-const restoreSubscriptions = async ({ publisher, body, headers, connection }, res) => {
+const restoreSubscriptions = async (
+  { publisher, body, headers, connection },
+  res
+) => {
   try {
     const { offers, publisherToken } = publisher;
     const { token, receiptData, appType, receipts } = body;
     const cleengToken = getTokenFromJWT(token);
 
-    const ipAddress =
-      headers['x-forwarded-for'] || connection.remoteAddress;
+    const ipAddress = headers['x-forwarded-for'] || connection.remoteAddress;
 
-    const result = await Promise.all(receipts.map(receipt => {
-
+    const result = await Promise.all(
+      receipts.map(receipt => {
         const { productId } = receipt;
-        const { offerId } = offers.find(({ androidProductId, appleProductId }) => (productId === androidProductId) || (productId === appleProductId));
+        const { offerId } = offers.find(
+          ({ androidProductId, appleProductId }) =>
+            productId === androidProductId || productId === appleProductId
+        );
 
-        receipt = {...receipt, receiptData};
+        receipt = { ...receipt, receiptData };
 
         return registerSubscription({
           publisher,
