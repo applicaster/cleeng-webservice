@@ -3,8 +3,8 @@ const app = express();
 const routes = require('./routes')();
 const db = require('./models');
 
-app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('body-parser').json());
+app.use(require('body-parser').urlencoded({ extended: true, limit: '50mb' }));
+app.use(require('body-parser').json({ limit: '50mb' }));
 app.use('/', routes);
 app.use(express.static(__dirname + '/../admin/build'));
 app.get('*', function(req, res) {
