@@ -17,7 +17,7 @@ const verifyAppStoreReceipt = async (receiptData, sharedKey) => {
     const { status } = response.data;
     if (status === 21007) {
       url = SANDBOX_URL;
-      response = await axios(url, method, data);
+      response = await axios({ url, method, data });
     }
 
     const { latest_receipt_info, status: st } = response.data;
