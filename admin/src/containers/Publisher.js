@@ -93,6 +93,11 @@ class Publisher extends Component {
     this.props.history.push(`/publisher/${_id}/logs`);
   };
 
+  onActivityLogsClick = () => {
+    const { _id = '' } = this.state.publisher;
+    this.props.history.push(`/publisher/${_id}/activitylogs`);
+  };
+
   render() {
     const { classes } = this.props;
     const { _id, offers } = this.props.publisher;
@@ -180,6 +185,9 @@ class Publisher extends Component {
           </Button>
           <Button color="primary" onClick={this.onLogsClick}>
             Logs
+          </Button>
+          <Button color="primary" onClick={this.onActivityLogsClick}>
+            Activity Logs
           </Button>
         </footer>
       </div>
