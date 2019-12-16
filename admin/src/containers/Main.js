@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Publishers from '../containers/Publishers';
 import Publisher from '../containers/Publisher';
 import Logs from './Logs';
+import ActivityLogs from './ActivityLogs';
 
 const styles = theme => ({
   root: {
@@ -50,6 +51,11 @@ class Main extends Component {
           <Switch>
             <Route exact path="/" component={Publishers} />
             <Route exact path="/publisher/:id/logs" component={Logs} />
+            <Route
+              exact
+              path="/publisher/:id/activitylogs"
+              component={ActivityLogs}
+            />
             <Route path="/publisher/:id" component={Publisher} />
           </Switch>
         </main>

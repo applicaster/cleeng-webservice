@@ -27,13 +27,21 @@ module.exports = () => {
   router.post('/register', publisherMiddleWare, register);
   router.post('/subscriptions', publisherMiddleWare, subscriptions);
   router.post('/subscription', publisherMiddleWare, addSubscription);
-  router.post('/restoreSubscriptions', publisherMiddleWare, restoreSubscriptions);
+  router.post(
+    '/restoreSubscriptions',
+    publisherMiddleWare,
+    restoreSubscriptions
+  );
   router.post('/extendToken', publisherMiddleWare, extendToken);
   router.post('/passwordReset', publisherMiddleWare, passwordReset);
   router.post('/submitConsent', publisherMiddleWare, submitConsent);
   router.post('/updateCustomerEmail', publisherMiddleWare, updateCustomerEmail);
   router.post('/getCustomer', publisherMiddleWare, getCustomer);
-  router.post('/generateCustomerToken', publisherMiddleWare, generateCustomerToken);  
+  router.post(
+    '/generateCustomerToken',
+    publisherMiddleWare,
+    generateCustomerToken
+  );
   router.post('/getFreeAccessToken', publisherMiddleWare, getFreeAccessToken);
 
   router.post('/publisher', dashboardAuth, dashboardController.updatePublisher);
@@ -47,6 +55,11 @@ module.exports = () => {
     '/publisher/:publisherId/logs',
     dashboardAuth,
     dashboardController.clearPublisherLogs
+  );
+  router.get(
+    '/publisher/:publisherId/activitylogs',
+    dashboardAuth,
+    dashboardController.getActivityLogs
   );
 
   return router;

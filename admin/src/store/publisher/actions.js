@@ -57,3 +57,21 @@ export function clearLogs(publisherId) {
     }
   };
 }
+
+export function getActivityLogs(publisherId) {
+  return async (dispatch, getState) => {
+    try {
+      const url = `/publisher/${publisherId}/activitylogs`;
+      const method = 'get';
+      const { authToken } = getState().user;
+      const Authorization = `bearer ${authToken}`;
+      const headers = { Authorization };
+      const response = await axios({ url, method, headers });
+      const { result: activitylogs } = response.data;
+      dispatch({ type: types.PUBLISHER_ACTIVITYLOGS_UPDATED, activitylogs });
+    } catch (error) {
+      dispatch({ type: types.PUBLISHER_ACTIVITYLOGS_UPDATED_FAILED, error });
+      console.error(error);
+    }
+  };
+}

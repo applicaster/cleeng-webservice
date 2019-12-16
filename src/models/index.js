@@ -30,3 +30,4 @@ process.on('SIGINT', () => {
 
 require('./publisher');
 require('./reqlog');
+require('./activityLog');
