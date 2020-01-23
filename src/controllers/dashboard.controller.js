@@ -33,61 +33,63 @@ const updatePublisher = async (req, res) => {
     } else {
       const promises = [];
 
-      (_publisher.offers || []).forEach(offer => {
-        const oldOffer = (publisher.offers || []).find(
-          o => o.offerId === offer.offerId
-        );
-        if (!oldOffer) {
-          promises.push(
-            addActivityLog(
-              _publisher,
-              req.userId,
-              activityTypes.ADD_OFFER,
-              offer
-            )
+      if (_publisher.offers && Array.isArray(_publisher.offers)) {
+        (_publisher.offers || []).forEach(offer => {
+          const oldOffer = (publisher.offers || []).find(
+            o => o.offerId === offer.offerId
           );
-        } else {
-          const diffData = compareObjects(oldOffer, offer, [
-            'hideOffer',
-            'should_hide_free_ribbon',
-            'isAutoRenewable',
-            'is_voucher_promoted',
-            'authId',
-            'offerId',
-            'secretKey',
-            'appleProductId',
-            'androidProductId',
-            'rokuProductId',
-            'freeAccessLoggedInAuthID'
-          ]);
-          if (Object.keys(diffData).length > 0) {
+          if (!oldOffer) {
             promises.push(
               addActivityLog(
                 _publisher,
                 req.userId,
-                activityTypes.UPDATE_OFFER,
-                diffData
+                activityTypes.ADD_OFFER,
+                offer
+              )
+            );
+          } else {
+            const diffData = compareObjects(oldOffer, offer, [
+              'hideOffer',
+              'should_hide_free_ribbon',
+              'isAutoRenewable',
+              'is_voucher_promoted',
+              'authId',
+              'offerId',
+              'secretKey',
+              'appleProductId',
+              'androidProductId',
+              'rokuProductId',
+              'freeAccessLoggedInAuthID'
+            ]);
+            if (Object.keys(diffData).length > 0) {
+              promises.push(
+                addActivityLog(
+                  _publisher,
+                  req.userId,
+                  activityTypes.UPDATE_OFFER,
+                  diffData
+                )
+              );
+            }
+          }
+        });
+
+        (publisher.offers || []).forEach(offer => {
+          const newOffer = (_publisher.offers || []).find(
+            o => o.offerId === offer.offerId
+          );
+          if (!newOffer) {
+            promises.push(
+              addActivityLog(
+                _publisher,
+                req.userId,
+                activityTypes.REMOVE_OFFER,
+                offer
               )
             );
           }
-        }
-      });
-
-      (publisher.offers || []).forEach(offer => {
-        const newOffer = (_publisher.offers || []).find(
-          o => o.offerId === offer.offerId
-        );
-        if (!newOffer) {
-          promises.push(
-            addActivityLog(
-              _publisher,
-              req.userId,
-              activityTypes.REMOVE_OFFER,
-              offer
-            )
-          );
-        }
-      });
+        });
+      }
 
       const diffData = compareObjects(publisher, _publisher, [
         'name',
