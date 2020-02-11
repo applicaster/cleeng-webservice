@@ -54,8 +54,8 @@ const payment = async (params, publisher) => {
     await logRequest(publisher, {
       url,
       method,
-      body,
-      headers: _headers,
+      body: data,
+      headers,
       result
     });
     return response;
