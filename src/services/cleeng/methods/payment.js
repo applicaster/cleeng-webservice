@@ -21,10 +21,10 @@ const payment = async (params, publisher) => {
     (appType.toLowerCase() === 'ios' || appType.toLowerCase() === 'tvos')
       ? 'apple'
       : appType && appType.toLowerCase() === 'roku'
-        ? 'roku'
-        : appType && appType.toLowerCase() === 'amazon'
-          ? 'amazon'
-          : 'android';
+      ? 'roku'
+      : appType && appType.toLowerCase() === 'amazon'
+      ? 'amazon'
+      : 'android';
 
   if (platform === 'apple' && isRestored) {
     const { offers } = publisher;
@@ -48,18 +48,21 @@ const payment = async (params, publisher) => {
     'cleeng.com'}/${platform}/payment`;
   const data = { customerToken, offerId, receipt, appType, order };
 
-  if (publisher.logActive) {
-    const body = JSON.stringify(data);
-    const _headers = JSON.stringify(headers);
+  try {
+    const response = await axios({ headers, url, method, data });
+    const result = response.data;
     await logRequest(publisher, {
       url,
       method,
-      body,
-      headers: _headers
+      body: data,
+      headers,
+      result
     });
+    return response;
+  } catch (err) {
+    await logRequest(publisher, { url, method, body: data, headers, err });
+    throw err;
   }
-
-  return axios({ headers, url, method, data });
 };
 
 module.exports = { payment };
