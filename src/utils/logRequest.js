@@ -1,21 +1,25 @@
 const Reqlog = require('../models/reqlog');
 
+const logger = require('logzio-nodejs').createLogger({
+  token: process.env.LOGZIO_TOKEN,
+  protocol: 'https'
+});
+
 const logRequest = async (publisher, data) => {
   try {
     const publisherId = publisher._id;
-    const publisherLogs = await Reqlog.find({ publisherId });
-    if (
-      publisherLogs.length >= parseInt(process.env.PUBLISHER_MAX_LOGS || 1000)
-    ) {
-      console.log(`Publisher ${publisherId} reached maximum logs count`);
-      return;
-    }
     data.publisherId = publisherId;
-    data.reqtime = new Date();
-    const reqlog = new Reqlog();
-    reqlog.set(data);
-    const result = await reqlog.save();
-    return result._id.toString();
+    try {
+      const body = data.body ? JSON.parse(data.body) : null;
+      if (body && body.params) {
+        data.customerEmail = body.params.customerEmail;
+        data.customerToken = body.params.customerToken;
+        if (body.params.password) delete body.params.password;
+      }
+      data.message = JSON.stringify(body);
+      delete data.body;
+    } catch (err) {}
+    logger.log(data);
   } catch (err) {
     console.log(`Error logging request: ${err.message}`);
   }
