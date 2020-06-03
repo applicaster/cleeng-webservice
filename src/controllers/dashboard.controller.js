@@ -18,7 +18,12 @@ const updatePublisher = async (req, res) => {
   try {
     const { publisher: _publisher } = req.body;
     const { _id } = _publisher;
-    let publisher = _id === '-1' ? null : await Publisher.findOne({ _id });
+
+    let publisher = null;
+
+    if (_id !== '-1') {
+      publisher = await Publisher.findOne({ _id });
+    }
 
     if (!publisher) {
       publisher = new Publisher();
