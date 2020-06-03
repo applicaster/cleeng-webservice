@@ -34,9 +34,9 @@ const updatePublisher = async (req, res) => {
       const promises = [];
 
       if (_publisher.offers && Array.isArray(_publisher.offers)) {
-        (_publisher.offers || []).forEach(offer => {
+        (_publisher.offers || []).forEach((offer) => {
           const oldOffer = (publisher.offers || []).find(
-            o => o.offerId === offer.offerId
+            (o) => o.offerId === offer.offerId
           );
           if (!oldOffer) {
             promises.push(
@@ -59,7 +59,7 @@ const updatePublisher = async (req, res) => {
               'appleProductId',
               'androidProductId',
               'rokuProductId',
-              'freeAccessLoggedInAuthID'
+              'freeAccessLoggedInAuthID',
             ]);
             if (Object.keys(diffData).length > 0) {
               promises.push(
@@ -74,9 +74,9 @@ const updatePublisher = async (req, res) => {
           }
         });
 
-        (publisher.offers || []).forEach(offer => {
+        (publisher.offers || []).forEach((offer) => {
           const newOffer = (_publisher.offers || []).find(
-            o => o.offerId === offer.offerId
+            (o) => o.offerId === offer.offerId
           );
           if (!newOffer) {
             promises.push(
@@ -97,7 +97,7 @@ const updatePublisher = async (req, res) => {
         'authToken',
         'secretKey',
         'appStoreSharedKey',
-        'logActive'
+        'logActive',
       ]);
       if (Object.keys(diffData).length > 0) {
         promises.push(
@@ -117,7 +117,8 @@ const updatePublisher = async (req, res) => {
       }
     }
 
-    publisher.set(_publisher);
+    const pdata = JSON.parse(JSON.stringify(_publisher));
+    publisher.set(pdata);
     publisher.updatedAt = new Date();
     publisher.updatedBy = req.userId;
 
@@ -161,7 +162,7 @@ const getActivityLogs = async (req, res) => {
     const { publisherId } = req.params;
 
     const result = await ActivityLog.find({ publisherId }).sort([
-      ['logtime', '-1']
+      ['logtime', '-1'],
     ]);
 
     res.status(200).send({ result });
@@ -176,5 +177,5 @@ module.exports = {
   updatePublisher,
   getPublisherLogs,
   clearPublisherLogs,
-  getActivityLogs
+  getActivityLogs,
 };
