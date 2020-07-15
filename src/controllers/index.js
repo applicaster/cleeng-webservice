@@ -84,9 +84,11 @@ const subscriptions = async (req, res) => {
       : allOffers.map(offer => offer.offerId);
 
     if (byAuthId == 1) {
-      offers = offers.filter(authId => {
-        return allOffers.some((offer) => authId === offer.authId )
-      });
+      offers = offers.map(authId => {
+        const { offerId } =
+        allOffers.find((offer) => authId == offer.authId) || {};
+        return offerId;
+      }).filter(Boolean);
     }
 
     const results = await Promise.all(
