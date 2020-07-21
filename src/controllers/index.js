@@ -86,14 +86,9 @@ const subscriptions = async (req, res) => {
     if (byAuthId == 1) {
       offers = offers.map(authId => {
         const { offerId } =
-          allOffers.find(offer => authId == offer.authId) || {};
-        if (!offerId) {
-          const error = new Error(`Invalid authId: ${authId}`);
-          error.code = 1001;
-          throw error;
-        }
+        allOffers.find((offer) => authId == offer.authId) || {};
         return offerId;
-      });
+      }).filter(Boolean);
     }
 
     const results = await Promise.all(
