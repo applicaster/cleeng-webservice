@@ -6,7 +6,7 @@ if (process.env.MONGODB_URI) {
 
 mongoose.connect(dbURI, {
   useNewUrlParser: true,
-  useUnifiedTopology, true,
+  useUnifiedTopology: true
 });
 
 mongoose.connection.on('connected', () => {
