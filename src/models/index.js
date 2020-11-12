@@ -4,7 +4,10 @@ if (process.env.MONGODB_URI) {
   dbURI = process.env.MONGODB_URI;
 }
 
-mongoose.connect(dbURI);
+mongoose.connect(dbURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology, true,
+});
 
 mongoose.connection.on('connected', () => {
   console.log(`Mongoose Conencted:${dbURI}`);
