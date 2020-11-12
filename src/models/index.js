@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const url = require('url');
+const querystring = require('querystring');
 
 
 let dbURI = 'mongodb://localhost/cleeng-publishers';
@@ -9,7 +11,7 @@ mongooseOpts = {
 if (process.env.MONGODB_URI) {
   dbURI = process.env.MONGODB_URI;
 
-  let dbURLParams = querystring.parse(uri.parse(dbURI).query)
+  let dbURLParams = querystring.parse(url.parse(dbURI).query)
   mongooseOpts["replicaSet"] = dbURLParams["replicaSet"]
   mongooseOpts["authSource"] = dbURLParams["authSource"]
 }
