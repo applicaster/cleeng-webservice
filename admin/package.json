@@ -6,7 +6,7 @@
     "@material-ui/core": "^1.5.1",
     "@material-ui/icons": "^2.0.3",
     "axios": "^0.18.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-google-login": "^3.2.1",
